@@ -1,0 +1,55 @@
+body,
+html {
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+	--fontSize: xx-large;
+}
+
+.transparent {
+	background-color: transparent;
+}
+
+.flexColumnContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.homeScreenText {
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	font-weight: bold;
+}
+
+.homeScreenButton,
+.gameLoadingScreenText {
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	display: block;
+	width: auto;
+	text-align: center;
+	margin: 0;
+}
+
+.homeScreenButton:hover::before {
+	content: ">>";
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+}
