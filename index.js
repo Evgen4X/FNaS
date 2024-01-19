@@ -7,8 +7,6 @@ class Element {
 		this.el.innerHTML = innerHTML;
 		this.cache = {};
 
-		console.log(this.el);
-
 		if (parent != null) {
 			parent.appendChild(this.el);
 		}
@@ -69,6 +67,7 @@ function play() {
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
 		switchScreens(GameLoadingScreen, GameScreen);
+		GameLoop();
 	}, 2000);
 }
 
@@ -80,6 +79,8 @@ function switchScreens(toClose, toOpen) {
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
 
 const GlobalCache = {night: 1, stars: 0};
+
+const Data = {time: 0}
 
 const ScreenParent = document.getElementById("ScreenParent");
 
@@ -119,12 +120,22 @@ const GameLoadingScreen = new Screen(GameLoadingScreenBG);
 
 //GAME SCREEN
 
-const OfficeBG = new Element("div", {"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/mainRoomBG.jpg')", "background-size": "99vw 99vh"}, ScreenParent);
+const OfficeBG = new Element("div", {"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/mainRoomBG.jpg')", "background-size": "99vw 99vh"}, ScreenParent, `
+<div class="gameText" id="gameTime">12AM</div>
+<div class="gameText" id="gameNightNumberDiv">Night: <span id="gameNightNumber">1</span></div>
+`);
 
-const OfficeRightDoor = new Element("div", {"z-index": 99, width: "10vw", height: "90vh", position: "absolute", top: "-85vh", left: "85vw", "background-image": "files/images/OfficeDoorRight.png", "background-size": "10vw 90vh"}, OfficeBG.el, ``);
+const OfficeDoor = new Element("div", {"z-index": 99, width: "10vw", height: "90vh", position: "absolute", top: "-85vh", left: "85vw", "background-image": "url(files/images/OfficeDoor.png)", "background-size": "10vw 90vh"}, OfficeBG.el, ``);
 
 const OfficeFG = new Element("div", {opacity: 0, "z-index": 2, position: "absolute", top: 0, left: 0, height: "99vh", width: "99vw", "background-image": "url('files/images/OfficeBG.png')", "background-size": "99vw 99vh"}, ScreenParent);
 
 const GameScreen = new Screen(OfficeBG, OfficeFG);
 
-function GameLoop() {}
+function GameLoop() {
+	Data.time += 1 / 1000; //TODO: fix whatever that does
+	let time = Data.time < 1 ? 12 : Math.floor(Data.time);
+	document.getElementById("gameTime").innerHTML = time + "AM";
+	console.log(Data.time);
+	setInterval(GameLoop, 25); //40 fps
+}
+
