@@ -9,7 +9,9 @@ class Element {
 
 		console.log(this.el);
 
-		parent.appendChild(this.el);
+		if (parent != null) {
+			parent.appendChild(this.el);
+		}
 	}
 
 	show(style) {
@@ -117,8 +119,12 @@ const GameLoadingScreen = new Screen(GameLoadingScreenBG);
 
 //GAME SCREEN
 
-const GameScreenBG = new Element("div", {width: "99vw", height: "99vh", "background-image": "url('files/images/mainRoomBG.jpg')"}, ScreenParent);
+const OfficeBG = new Element("div", {"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/mainRoomBG.jpg')", "background-size": "99vw 99vh"}, ScreenParent);
 
-const GameScreenFG = new Element("div", {position: "absolute", top: 0, left: 0, height: "99vh", width: "99vw", "background-size": "cover", "background-repeat": "no-repeat", width: "99vw", height: "99vh", "background-image": "url('files/images/mainRoomBG.jpg')"}, ScreenParent);
+const OfficeRightDoor = new Element("div", {"z-index": 99, width: "10vw", height: "90vh", position: "absolute", top: "-85vh", left: "85vw", "background-image": "files/images/OfficeDoorRight.png", "background-size": "10vw 90vh"}, OfficeBG.el, ``);
 
-const GameScreen = new Screen(GameScreenBG, GameScreenFG);
+const OfficeFG = new Element("div", {opacity: 0, "z-index": 2, position: "absolute", top: 0, left: 0, height: "99vh", width: "99vw", "background-image": "url('files/images/OfficeBG.png')", "background-size": "99vw 99vh"}, ScreenParent);
+
+const GameScreen = new Screen(OfficeBG, OfficeFG);
+
+function GameLoop() {}
