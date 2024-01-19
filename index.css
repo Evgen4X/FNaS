@@ -29,7 +29,8 @@ html {
 }
 
 .homeScreenButton,
-.gameLoadingScreenText {
+.gameLoadingScreenText,
+.gameText {
 	background-color: transparent;
 	color: white;
 	font-size: var(--fontSize);
@@ -52,4 +53,10 @@ html {
 	border: none;
 	text-transform: uppercase;
 	font-weight: bold;
+}
+
+#gameTime,
+#gameNightNumberDiv{
+	text-align: right;
+	align-self: right;
 }
