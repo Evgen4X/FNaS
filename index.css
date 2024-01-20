@@ -67,7 +67,7 @@ html {
 	background-color: #aa0000;
 	position: absolute;
 	z-index: 3;
-	border: min(0.5vw, 0.7vh) solid grey;
+	border: min(0.5vw, 0.7vh) solid #323;
 }
 
 .gameControlButton[state="on"] {

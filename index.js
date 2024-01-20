@@ -63,11 +63,55 @@ class Screen {
 	}
 }
 
+class Frame {
+	constructor(id, n, img, posX, posY, width, height) {
+		this.id = id;
+		this.n = n;
+		this.image = img;
+		this.x = posX;
+		this.y = posY;
+		this.w = width;
+		this.h = height;
+	}
+}
+
+class Animatronic {
+	constructor(id, frames, end, alternativeFrames = null, divergenceAt = 0, convergenceAt = 0) {
+		this.id = id;
+		this.frames = frames;
+		this.speed = 0;
+		this.pos = 0;
+		this.end = end;
+		if (alternativeFrames != null) {
+			this.alternativeFrames = alternativeFrames;
+			this.divergenceAt = divergenceAt;
+			this.convergenceAt = convergenceAt;
+		}
+	}
+
+	setSpeed(speed) {
+		this.speed = speed;
+	}
+
+	update() {
+		if (Math.random() < speed) {
+			//TODO: add super-mega-complex formula on speed calculations
+			this.pos++;
+			if (this.pos == end) {
+				this.jumpscare();
+			}
+		}
+	}
+
+	jumpscare() {} //TODO: do.
+}
+
 function play() {
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
 		switchScreens(GameLoadingScreen, GameScreen);
 		GameLoop();
+		CameraToggleButton.show();
 	}, 2000);
 }
 
@@ -131,19 +175,46 @@ function windowLight() {
 	}
 }
 
+function getCameraScreen(id) {
+	switch (id) {
+		case 0:
+			return CameraScreen01;
+		case 1:
+			return CameraScreen02;
+		default:
+			return null;
+	}
+}
+
+function toggleCamera() {
+	let button = document.getElementById("cameraToggleButton");
+	button.onmouseenter = "";
+	setTimeout(() => {
+		button.onmouseenter = toggleCamera;
+	}, 300);
+	if (button.getAttribute("state") == "off") {
+		button.setAttribute("state", "on");
+		switchScreens(GameScreen, getCameraScreen(Data.cameraId));
+	} else {
+		button.setAttribute("state", "off");
+		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
+	}
+}
+
 function Victory() {
 	switchScreens(GameScreen, VictoryScreen);
 	Cache.night++;
 	Data.time = 0;
 	Data.energy = 5000;
 	Data.usage = 1;
+	CameraToggleButton.hide();
 }
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
 
 const GlobalCache = {night: 1, stars: 0};
 
-const Data = {time: 0, usage: 1, energy: 5000};
+const Data = {time: 0, usage: 1, energy: 5000, cameraId: 0};
 
 const ScreenParent = document.getElementById("ScreenParent");
 
@@ -193,6 +264,20 @@ const VictoryScreenBG = new Element(
 
 const VictoryScreen = new Screen(VictoryScreenBG);
 
+//CAMERA SCREENS
+
+const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen01 = new Screen(CameraScreen01BG);
+
+const CameraScreen02BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen02 = new Screen(CameraScreen02BG);
+
+const CameraScreen03BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen03 = new Screen(CameraScreen02BG);
+
+const CameraScreen04BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen04 = new Screen(CameraScreen02BG);
+
 //GAME SCREEN
 
 const OfficeBG = new Element(
@@ -212,10 +297,10 @@ const OfficeBG = new Element(
 );
 
 const OfficeDoor = new Element("div", {"z-index": 1, width: "23vw", height: "47vh", position: "absolute", top: "-20vh", left: "42vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "23vw 45vh"}, OfficeBG.el, ``);
-OfficeDoor.id = "officeDoor";
+OfficeDoor.el.id = "officeDoor";
 
 const OfficeWindow = new Element("div", {"z-index": 1, width: "11vw", height: "30vh", position: "absolute", top: "-7vh", left: "17vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el, ``);
-OfficeWindow.id = "officeWindow";
+OfficeWindow.el.id = "officeWindow";
 
 const EnergyLevel = new Element("div", {"z-index": 4, width: "auto", height: "5vh", position: "absolute", top: "79vh", left: "5vw"}, OfficeBG.el, `Power left: 100%`);
 EnergyLevel.el.classList.add("gameText");
@@ -229,6 +314,12 @@ const usageColors = [
 	[255, 0, 0],
 	[128, 0, 0],
 ];
+
+const CameraToggleButton = new Element("div", {"z-index": 4, width: "40vw", height: "10vh", position: "absolute", top: "85vh", left: "30vw", "background-image": "url(files/images/cameraToggleButton.png)", "background-size": "40vw 10vh", filter: "invert(100%)"}, ScreenParent);
+CameraToggleButton.el.id = "cameraToggleButton";
+CameraToggleButton.el.setAttribute("state", "off");
+CameraToggleButton.el.onmouseenter = toggleCamera;
+CameraToggleButton.hide();
 
 const OfficeFG = new Element("div", {"z-index": 2, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
 
