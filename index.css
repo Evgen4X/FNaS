@@ -56,7 +56,26 @@ html {
 }
 
 #gameTime,
-#gameNightNumberDiv{
+#gameNightNumberDiv {
 	text-align: right;
 	align-self: right;
+}
+
+.gameControlButton {
+	width: min(2.5vw, 3vh);
+	height: min(2.5vw, 3vh);
+	background-color: #aa0000;
+	position: absolute;
+	z-index: 3;
+	border: min(0.5vw, 0.7vh) solid grey;
+}
+
+.gameControlButton[state="on"] {
+	background-color: #00aa00;
+}
+
+.gameDarkRect {
+	position: absolute;
+	background-color: black;
+	z-index: 1;
 }
