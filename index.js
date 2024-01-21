@@ -73,6 +73,10 @@ class Frame {
 		this.w = width;
 		this.h = height;
 	}
+
+	getElement(parent, innerHTML = "") {
+		return new Element("div", {position: "absolute", top: this.y + "vh", left: this.x + "vw", width: this.w + "vw", height: this.h + "vh", "background-image": `url(${this.img})`, "background-size": `${this.w}vw ${this.j}vh`}, parent, innerHTML);
+	}
 }
 
 class Animatronic {
@@ -94,7 +98,7 @@ class Animatronic {
 	}
 
 	update() {
-		if (Math.random() < speed) {
+		if (Math.random() < this.speed) {
 			//TODO: add super-mega-complex formula on speed calculations
 			this.pos++;
 			if (this.pos == end) {
@@ -112,6 +116,8 @@ function play() {
 		switchScreens(GameLoadingScreen, GameScreen);
 		GameLoop();
 		CameraToggleButton.show();
+		EnergyBar.show();
+		EnergyLevel.show();
 	}, 2000);
 }
 
@@ -194,8 +200,10 @@ function toggleCamera() {
 	}, 300);
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
+		Data.usage++;
 		switchScreens(GameScreen, getCameraScreen(Data.cameraId));
 	} else {
+		Data.usage--;
 		button.setAttribute("state", "off");
 		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 	}
@@ -208,6 +216,8 @@ function Victory() {
 	Data.energy = 5000;
 	Data.usage = 1;
 	CameraToggleButton.hide();
+	EnergyBar.hide();
+	EnergyLevel.hide();
 }
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
@@ -228,6 +238,7 @@ const HomeScreenBG = new Element(
 <div class='transparent flexColumnContainer'>
 	<p class='homeScreenText'>Fife<br>Nights<br>at<br>Szuj</p>
 	<button class='homeScreenButton' onclick='play()'>Play</button>
+	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen)'>Credits</button>
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
 <img src="" width="50vw" height: "99vh" />
@@ -237,6 +248,28 @@ const HomeScreenBG = new Element(
 const HomeScreen = new Screen(HomeScreenBG);
 
 HomeScreen.show();
+
+//CREDITS SCREEN
+
+const CreditsScreenBG = new Element(
+	"div",
+	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "99vw", height: "99vh", "background-image": "url(files/images/cameraGlitch.jpg)"},
+	ScreenParent,
+	`
+	<p class='homeScreenText'>Credits</p>
+	<table style='min-width: 50vw;'>
+		<tr><td class='homeScreenText' style='text-align: center;'>Autor</td><td class='homeScreenText'>
+		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+		<tr><td class='homeScreenText' style='text-align: center;'>Designer</td><td class='homeScreenText'>
+		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+		<tr><td class='homeScreenText' style='text-align: center;'>Everything else</td><td class='homeScreenText'>
+		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+	</table>
+	<button class='homeScreenButton' onclick='switchScreens(CreditsScreen, HomeScreen)'>Back</button>
+`
+);
+
+const CreditsScreen = new Screen(CreditsScreenBG);
 
 //GAME LOADING SCREEN
 
@@ -266,17 +299,17 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 
 //CAMERA SCREENS
 
-const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
 const CameraScreen02BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.png)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
 const CameraScreen03BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "99vw 99vh"}, ScreenParent);
-const CameraScreen03 = new Screen(CameraScreen02BG);
+const CameraScreen03 = new Screen(CameraScreen03BG);
 
 const CameraScreen04BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "99vw 99vh"}, ScreenParent);
-const CameraScreen04 = new Screen(CameraScreen02BG);
+const CameraScreen04 = new Screen(CameraScreen04BG);
 
 //GAME SCREEN
 
@@ -285,16 +318,19 @@ const OfficeBG = new Element(
 	{"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/OfficeBG.jpg')", "background-size": "99vw 99vh"},
 	ScreenParent,
 	`
-<div class="gameText" id="gameTime">12AM</div>
-<div class="gameText" id="gameNightNumberDiv">Night: <span id="gameNightNumber">1</span></div>
-
-<div class="gameControlButton" id="doorOpenButton" style="top: 40vh; left: 70vw;" state="off" onclick="doorToggle();"></div>
-<div class="gameControlButton" id="windowOpenButton" style="top: 40vh; left: 33vw;" state="off" onclick="windowToggle();"></div>
-
-<div class="gameDarkRect" id="doorDarkRect" style="opacity: 1; top: 30vh; left: 42vw; width: 23vw; height: 47vh;" onclick="doorLight()";></div>
-<div class="gameDarkRect" id="windowDarkRect" style="opacity: 1; top: 23vh; left: 17vw; width: 11vw; height: 30vh;" onclick="windowLight()";></div>
-`
+	<div class="gameText" id="gameTime">12AM</div>
+	<div class="gameText" id="gameNightNumberDiv">Night: <span id="gameNightNumber">1</span></div>
+	
+	<div class="gameControlButton" id="doorOpenButton" style="top: 40vh; left: 70vw;" state="off" onclick="doorToggle();"></div>
+	<div class="gameControlButton" id="windowOpenButton" style="top: 40vh; left: 33vw;" state="off" onclick="windowToggle();"></div>
+	
+	<div class="gameDarkRect" id="doorDarkRect" style="opacity: 1; top: 30vh; left: 42vw; width: 23vw; height: 47vh;" onclick="doorLight()";></div>
+	<div class="gameDarkRect" id="windowDarkRect" style="opacity: 1; top: 23vh; left: 17vw; width: 11vw; height: 30vh;" onclick="windowLight()";></div>
+	`
 );
+
+const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
+OfficeWindowView.el.id = "officeWindowVeiw";
 
 const OfficeDoor = new Element("div", {"z-index": 1, width: "23vw", height: "47vh", position: "absolute", top: "-20vh", left: "42vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "23vw 45vh"}, OfficeBG.el, ``);
 OfficeDoor.el.id = "officeDoor";
@@ -302,10 +338,12 @@ OfficeDoor.el.id = "officeDoor";
 const OfficeWindow = new Element("div", {"z-index": 1, width: "11vw", height: "30vh", position: "absolute", top: "-7vh", left: "17vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el, ``);
 OfficeWindow.el.id = "officeWindow";
 
-const EnergyLevel = new Element("div", {"z-index": 4, width: "auto", height: "5vh", position: "absolute", top: "79vh", left: "5vw"}, OfficeBG.el, `Power left: 100%`);
+const EnergyLevel = new Element("div", {"z-index": 4, width: "auto", height: "5vh", position: "absolute", top: "79vh", left: "5vw"}, ScreenParent, `Power left: 100%`);
 EnergyLevel.el.classList.add("gameText");
-const EnergyBar = new Element("div", {"z-index": 4, width: "21vw", height: "10vh", position: "absolute", top: "85vh", left: "5vw", border: "0.2vw solid grey"}, OfficeBG.el);
+EnergyLevel.hide();
+const EnergyBar = new Element("div", {"z-index": 4, width: "21.5vw", height: "10vh", position: "absolute", top: "85vh", left: "5vw", border: "0.2vw solid grey"}, ScreenParent);
 EnergyBar.id = "energyBar";
+EnergyBar.hide();
 const usageColors = [
 	[0, 255, 0],
 	[128, 255, 0],
