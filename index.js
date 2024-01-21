@@ -187,6 +187,12 @@ function getCameraScreen(id) {
 			return CameraScreen01;
 		case 1:
 			return CameraScreen02;
+		case 2:
+			return CameraScreen03;
+		case 3:
+			return CameraScreen04;
+		case 4:
+			return CameraScreen05;
 		default:
 			return null;
 	}
@@ -200,24 +206,61 @@ function toggleCamera() {
 	}, 300);
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
+		CameraMap.show();
 		Data.usage++;
 		switchScreens(GameScreen, getCameraScreen(Data.cameraId));
 	} else {
 		Data.usage--;
 		button.setAttribute("state", "off");
+		CameraMap.hide();
 		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 	}
 }
 
+function switchCameras(idToClose, idToOpen) {
+	if (idToClose == idToOpen) {
+		return;
+	}
+	if (idToClose == null) {
+		idToClose = Data.cameraId;
+	}
+	Data.cameraId = idToOpen;
+	switchScreens(getCameraScreen(idToClose), getCameraScreen(idToOpen));
+}
+
 function Victory() {
-	switchScreens(GameScreen, VictoryScreen);
-	Cache.night++;
+	GlobalCache.night++;
 	Data.time = 0;
+	Data.cameraId = 0;
 	Data.energy = 5000;
-	Data.usage = 1;
+	let button = document.getElementById("doorOpenButton");
+	if (button.getAttribute("state") == "on") {
+		doorToggle();
+	}
+	button = document.getElementById("windowOpenButton");
+	if (button.getAttribute("state") == "on") {
+		windowToggle();
+	}
+	button = document.getElementById("doorDarkRect");
+	if (button.style.opacity == 0) {
+		doorLight();
+	}
+	button = document.getElementById("windowDarkRect");
+	if (button.style.opacity == 0) {
+		windowLight();
+	}
+	button = document.getElementById("cameraToggleButton");
+	if (button.getAttribute("state") == "on") {
+		toggleCamera();
+	}
 	CameraToggleButton.hide();
 	EnergyBar.hide();
 	EnergyLevel.hide();
+	document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
+	switchScreens(GameScreen, VictoryScreen);
+	setTimeout(() => {
+		switchScreens(VictoryScreen, HomeScreen);
+	}, 2000);
 }
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
@@ -258,12 +301,12 @@ const CreditsScreenBG = new Element(
 	`
 	<p class='homeScreenText'>Credits</p>
 	<table style='min-width: 50vw;'>
-		<tr><td class='homeScreenText' style='text-align: center;'>Autor</td><td class='homeScreenText'>
-		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
-		<tr><td class='homeScreenText' style='text-align: center;'>Designer</td><td class='homeScreenText'>
-		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
-		<tr><td class='homeScreenText' style='text-align: center;'>Everything else</td><td class='homeScreenText'>
-		<button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+		<tr><td class='homeScreenText' style='text-align: center;'>Autor</td>
+		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+		<tr><td class='homeScreenText' style='text-align: center;'>Designer</td>
+		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+		<tr><td class='homeScreenText' style='text-align: center;'>Everything else</td>
+		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
 	</table>
 	<button class='homeScreenButton' onclick='switchScreens(CreditsScreen, HomeScreen)'>Back</button>
 `
@@ -279,7 +322,7 @@ const GameLoadingScreenBG = new Element(
 	ScreenParent,
 	`
 <p class="gameLoadingScreenText">12:00 AM</p>
-<p class="gameLoadingScreenText">${orderedNumberOf[GlobalCache.night - 1]} Night</p>
+<p class="gameLoadingScreenText" id='nightNumber'>${orderedNumberOf[GlobalCache.night - 1]} Night</p>
 `
 );
 
@@ -302,14 +345,34 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
-const CameraScreen02BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen02BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
-const CameraScreen03BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen03BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
-const CameraScreen04BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen04BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen04 = new Screen(CameraScreen04BG);
+
+const CameraScreen05BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen05 = new Screen(CameraScreen05BG);
+
+//CAMERA MANAGEMENT
+
+const CameraMap = new Element(
+	"div",
+	{"z-index": 2, position: "absolute", width: "30vw", height: "35vh", top: "60vh", left: "70vw", "background-image": "url('files/images/cameraMap.png')", "background-size": "30vw 35vh"},
+	ScreenParent,
+	`
+<button class='cameraControlButton' style='top: 20vh; left: 21vw;' onclick='switchCameras(null, 0);'></button>
+<button class='cameraControlButton' style='top: 20vh; left: 5vw;' onclick='switchCameras(null, 1);'></button>
+<button class='cameraControlButton' style='top: 5vh; left: 21vw;' onclick='switchCameras(null, 2);'></button>
+<button class='cameraControlButton' style='top: 5vh; left: 5vw;' onclick='switchCameras(null, 3);'></button>
+<button class='cameraControlButton' style='top: 29vh; left: 1vw;' onclick='switchCameras(null, 4);'></button>
+`
+);
+
+CameraMap.hide();
 
 //GAME SCREEN
 
@@ -365,7 +428,7 @@ const GameScreen = new Screen(OfficeBG, OfficeFG);
 
 function GameLoop() {
 	//Time control
-	Data.time += 1;
+	Data.time += 100;
 	let time = Data.time / 3600;
 	time = time < 1 ? 12 : Math.floor(time);
 	document.getElementById("gameTime").innerHTML = time + "AM";

@@ -79,3 +79,13 @@ html {
 	background-color: black;
 	z-index: 1;
 }
+
+.cameraControlButton {
+	opacity: 0;
+	width: 4.5vw;
+	height: 4.5vh;
+	/* background-color: #c0ffee; */
+	position: absolute;
+	outline: none;
+	border: none;
+}
