@@ -203,17 +203,33 @@ function toggleCamera() {
 	button.onmouseenter = "";
 	setTimeout(() => {
 		button.onmouseenter = toggleCamera;
-	}, 300);
+	}, 334);
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
-		CameraMap.show();
 		Data.usage++;
-		switchScreens(GameScreen, getCameraScreen(Data.cameraId));
+		CameraScreen.show()
+		CameraScreen.el.animate([
+			{transform: "rotateX(90deg)"},
+			{transform: "rotateX(0deg)"}
+		], {duration: 333, easing: "ease-out"});
+		setTimeout(() => {
+			switchScreens(GameScreen, getCameraScreen(Data.cameraId));
+			CameraMap.show();
+			CameraScreen.hide();
+		}, 333);
 	} else {
 		Data.usage--;
 		button.setAttribute("state", "off");
-		CameraMap.hide();
-		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
+		CameraScreen.show();
+		CameraScreen.el.animate([
+			{transform: "rotateX(0deg)"},
+			{transform: "rotateX(90deg)"}
+		], {duration: 333, easing: "ease-in"});
+		setTimeout(() => {
+			CameraMap.hide();
+			switchScreens(getCameraScreen(Data.cameraId), GameScreen);
+			CameraScreen.hide();
+		}, 333);
 	}
 }
 
@@ -342,6 +358,9 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 
 //CAMERA SCREENS
 
+const CameraScreen = new Element("div", {position: 'absolute', top: '0vh', transform: 'rotateX(90deg)', width: "99vw", height: "200vh", 'z-index': 999, border: '2vw solid #333333', 'background-color': 'black'}, ScreenParent);
+CameraScreen.hide();
+
 const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
@@ -376,12 +395,15 @@ CameraMap.hide();
 
 //GAME SCREEN
 
+const Time = new Element("div", {'z-index': 5, position: "absolute", left: "94vw"}, ScreenParent);
+Time.el.classList.add("gameText");
+
 const OfficeBG = new Element(
 	"div",
 	{"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/OfficeBG.jpg')", "background-size": "99vw 99vh"},
 	ScreenParent,
 	`
-	<div class="gameText" id="gameTime">12AM</div>
+	<div class="gameText">.              </div>
 	<div class="gameText" id="gameNightNumberDiv">Night: <span id="gameNightNumber">1</span></div>
 	
 	<div class="gameControlButton" id="doorOpenButton" style="top: 40vh; left: 70vw;" state="off" onclick="doorToggle();"></div>
@@ -431,7 +453,7 @@ function GameLoop() {
 	Data.time += 1;
 	let time = Data.time / 3600;
 	time = time < 1 ? 12 : Math.floor(time);
-	document.getElementById("gameTime").innerHTML = time + "AM";
+	Time.el.innerHTML = time + "AM";
 	if (time >= 6 && time != 12) {
 		Victory();
 		return;
