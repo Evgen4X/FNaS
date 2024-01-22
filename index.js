@@ -428,7 +428,7 @@ const GameScreen = new Screen(OfficeBG, OfficeFG);
 
 function GameLoop() {
 	//Time control
-	Data.time += 100;
+	Data.time += 1;
 	let time = Data.time / 3600;
 	time = time < 1 ? 12 : Math.floor(time);
 	document.getElementById("gameTime").innerHTML = time + "AM";
