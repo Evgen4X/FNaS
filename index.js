@@ -361,6 +361,8 @@ const CreditsScreenBG = new Element(
 		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
 		<tr><td class='homeScreenText' style='text-align: center;'>Designer</td>
 		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
+        <tr><td class='homeScreenText' style='text-align: center;'>Photos</td>
+		<td class='homeScreenText'><button class='homeScreenButton' onlick='window.open("https://www.facebook.com/zsmetarnow", "blank_")'>ZSME</button></td></tr>
 		<tr><td class='homeScreenText' style='text-align: center;'>Everything else</td>
 		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
 	</table>
