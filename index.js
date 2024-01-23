@@ -110,14 +110,27 @@ class Animatronic {
 	jumpscare() {} //TODO: do.
 }
 
+function newGame() {
+	GlobalCache.night = 1;
+	GlobalCache.stars = 0;
+	document.getElementById("nightNumber").innerHTML = "1ST NIGHT";
+	localStorage.removeItem("FNaS_night");
+	localStorage.removeItem("FNaS_stars");
+	play();
+}
+
 function play() {
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
 		switchScreens(GameLoadingScreen, GameScreen);
 		GameLoop();
 		CameraToggleButton.show();
+		FlowersToggleButton.show();
 		EnergyBar.show();
 		EnergyLevel.show();
+		Night.el.innerHTML = `Night: ${GlobalCache.night}`;
+		Time.show();
+		Night.show();
 	}, 2000);
 }
 
@@ -181,6 +194,25 @@ function windowLight() {
 	}
 }
 
+function toggleFlowers() {
+	let button = FlowersToggleButton.el;
+	button.onmouseenter = "";
+	if (button.getAttribute("state") == "off") {
+		button.setAttribute("state", "on");
+		Flowers.show();
+		Flowers.el.animate([{top: "99vh"}, {top: "9vh"}], {duration: 333, fill: "forwards", easing: "ease-out"});
+	} else {
+		button.setAttribute("state", "off");
+		Flowers.el.animate([{top: "9vh"}, {top: "99vh"}], {duration: 333, fill: "forwards", easing: "ease-in"});
+		setTimeout(() => {
+			Flowers.hide();
+		}, 334);
+	}
+	setTimeout(() => {
+		button.onmouseenter = toggleFlowers;
+	}, 336);
+}
+
 function getCameraScreen(id) {
 	switch (id) {
 		case 0:
@@ -207,11 +239,9 @@ function toggleCamera() {
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Data.usage++;
-		CameraScreen.show()
-		CameraScreen.el.animate([
-			{transform: "rotateX(90deg)"},
-			{transform: "rotateX(0deg)"}
-		], {duration: 333, easing: "ease-out"});
+		FlowersToggleButton.hide();
+		CameraScreen.show();
+		CameraScreen.el.animate([{transform: "rotateX(90deg)"}, {transform: "rotateX(0deg)"}], {duration: 333, easing: "ease-out"});
 		setTimeout(() => {
 			switchScreens(GameScreen, getCameraScreen(Data.cameraId));
 			CameraMap.show();
@@ -221,14 +251,12 @@ function toggleCamera() {
 		Data.usage--;
 		button.setAttribute("state", "off");
 		CameraScreen.show();
-		CameraScreen.el.animate([
-			{transform: "rotateX(0deg)"},
-			{transform: "rotateX(90deg)"}
-		], {duration: 333, easing: "ease-in"});
+		CameraScreen.el.animate([{transform: "rotateX(0deg)"}, {transform: "rotateX(90deg)"}], {duration: 333, easing: "ease-in"});
+		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
+		CameraMap.hide();
 		setTimeout(() => {
-			CameraMap.hide();
-			switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 			CameraScreen.hide();
+			FlowersToggleButton.show();
 		}, 333);
 	}
 }
@@ -246,9 +274,8 @@ function switchCameras(idToClose, idToOpen) {
 
 function Victory() {
 	GlobalCache.night++;
-	Data.time = 0;
-	Data.cameraId = 0;
-	Data.energy = 5000;
+	localStorage.setItem("FNaS_night", GlobalCache.night);
+	localStorage.setItem("FNaS_stars", GlobalCache.stars);
 	let button = document.getElementById("doorOpenButton");
 	if (button.getAttribute("state") == "on") {
 		doorToggle();
@@ -269,14 +296,26 @@ function Victory() {
 	if (button.getAttribute("state") == "on") {
 		toggleCamera();
 	}
-	CameraToggleButton.hide();
-	EnergyBar.hide();
-	EnergyLevel.hide();
-	document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
-	switchScreens(GameScreen, VictoryScreen);
+	button = document.getElementById("flowersToggleButton");
+	if (button.getAttribute("state") == "on") {
+		toggleFlowers();
+	}
 	setTimeout(() => {
-		switchScreens(VictoryScreen, HomeScreen);
-	}, 2000);
+		Data.time = 0;
+		Data.cameraId = 0;
+		Data.energy = 5000;
+		CameraToggleButton.hide();
+		FlowersToggleButton.hide();
+		EnergyBar.hide();
+		EnergyLevel.hide();
+		Time.hide();
+		Night.hide();
+		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
+		switchScreens(GameScreen, VictoryScreen);
+		setTimeout(() => {
+			switchScreens(VictoryScreen, HomeScreen);
+		}, 2000);
+	}, 337);
 }
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
@@ -297,6 +336,7 @@ const HomeScreenBG = new Element(
 <div class='transparent flexColumnContainer'>
 	<p class='homeScreenText'>Fife<br>Nights<br>at<br>Szuj</p>
 	<button class='homeScreenButton' onclick='play()'>Play</button>
+	<button class='homeScreenButton' onclick='newGame()'>New game</button>
 	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen)'>Credits</button>
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
@@ -358,7 +398,7 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 
 //CAMERA SCREENS
 
-const CameraScreen = new Element("div", {position: 'absolute', top: '0vh', transform: 'rotateX(90deg)', width: "99vw", height: "200vh", 'z-index': 999, border: '2vw solid #333333', 'background-color': 'black'}, ScreenParent);
+const CameraScreen = new Element("div", {position: "absolute", top: "0vh", transform: "rotateX(90deg)", width: "99vw", height: "200vh", "z-index": 999, border: "2vw solid #333333", "background-color": "black"}, ScreenParent);
 CameraScreen.hide();
 
 const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
@@ -393,19 +433,18 @@ const CameraMap = new Element(
 
 CameraMap.hide();
 
-//GAME SCREEN
+/*    GAME SCREEN     */
 
-const Time = new Element("div", {'z-index': 5, position: "absolute", left: "94vw"}, ScreenParent);
+const Time = new Element("div", {"z-index": 5, position: "absolute", top: 0, left: "93vw"}, ScreenParent);
 Time.el.classList.add("gameText");
+const Night = new Element("div", {"z-index": 5, position: "absolute", top: "1.2em", left: "89vw"}, ScreenParent);
+Night.el.classList.add("gameText");
 
 const OfficeBG = new Element(
 	"div",
 	{"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/OfficeBG.jpg')", "background-size": "99vw 99vh"},
 	ScreenParent,
 	`
-	<div class="gameText">.              </div>
-	<div class="gameText" id="gameNightNumberDiv">Night: <span id="gameNightNumber">1</span></div>
-	
 	<div class="gameControlButton" id="doorOpenButton" style="top: 40vh; left: 70vw;" state="off" onclick="doorToggle();"></div>
 	<div class="gameControlButton" id="windowOpenButton" style="top: 40vh; left: 33vw;" state="off" onclick="windowToggle();"></div>
 	
@@ -444,6 +483,19 @@ CameraToggleButton.el.setAttribute("state", "off");
 CameraToggleButton.el.onmouseenter = toggleCamera;
 CameraToggleButton.hide();
 
+//FLOWERS
+
+const Flowers = new Element("div", {"z-index": 10, position: "absolute", top: "99vh", left: "10vw", height: "90vh", width: "80vw", "background-image": "url(files/images/Flowers.png)", "background-size": "80vw 90vh"}, OfficeBG.el);
+Flowers.hide();
+
+const FlowersToggleButton = new Element("div", {"z-index": 11, width: "25vw", height: "10vh", position: "absolute", top: "85vh", left: "71vw", "background-image": "url(files/images/cameraToggleButton.png)", "background-size": "25vw 10vh", filter: "invert(100%) sepia(10000%)"}, ScreenParent);
+FlowersToggleButton.el.id = "flowersToggleButton";
+FlowersToggleButton.el.setAttribute("state", "off");
+FlowersToggleButton.el.onmouseenter = toggleFlowers;
+FlowersToggleButton.hide();
+
+//
+
 const OfficeFG = new Element("div", {"z-index": 2, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
 
 const GameScreen = new Screen(OfficeBG, OfficeFG);
@@ -476,4 +528,12 @@ function GameLoop() {
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
 
 	setTimeout(GameLoop, 25); //40 fps
+}
+
+// GETTING PREVIOUS DATA (if exists)
+
+let previousNight = localStorage.getItem("FNaS_night");
+if (previousNight) {
+	GlobalCache.night = previousNight;
+	document.getElementById("nightNumber").innerHTML = orderedNumberOf[previousNight - 1] + " NIGHT";
 }
