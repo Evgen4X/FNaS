@@ -64,7 +64,7 @@ class Screen {
 }
 
 class Frame {
-	constructor(id, n, img, posX, posY, width, height) {
+	constructor(id, n, img, posX, posY, width, height, func=null) {
 		this.id = id;
 		this.n = n;
 		this.image = img;
@@ -72,6 +72,7 @@ class Frame {
 		this.y = posY;
 		this.w = width;
 		this.h = height;
+		this.f = func;
 	}
 
 	getElement(parent, innerHTML = "") {
@@ -103,6 +104,10 @@ class Animatronic {
 			this.pos++;
 			if (this.pos == end) {
 				this.jumpscare();
+				return;
+			}
+			if(this.frames[this.pos].func != null){
+				this.frames[this.pos].func();
 			}
 		}
 	}
@@ -418,9 +423,12 @@ const CameraScreen03BG = new Element("div", {width: "100vw", height: "100vh", "z
 `);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
-const CameraScreen04BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen04BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"}, ScreenParent, `
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
 `);
+
+const CameraDoor04 = new Element("div", {width: "4vw", height: "11.3vh", "z-index": 1, "background-image": "url(files/images/cameraDoor03.png)", "background-size": "4vw 11.3vh", position: "absolute", top: "30vh", left: "35.5vw"}, CameraScreen04BG.el); 
+
 const CameraScreen04 = new Screen(CameraScreen04BG);
 
 const CameraScreen05BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
