@@ -200,10 +200,10 @@ function toggleFlowers() {
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Flowers.show();
-		Flowers.el.animate([{top: "99vh"}, {top: "9vh"}], {duration: 333, fill: "forwards", easing: "ease-out"});
+		Flowers.el.animate([{top: "100vh"}, {top: "9vh"}], {duration: 333, fill: "forwards", easing: "ease-out"});
 	} else {
 		button.setAttribute("state", "off");
-		Flowers.el.animate([{top: "9vh"}, {top: "99vh"}], {duration: 333, fill: "forwards", easing: "ease-in"});
+		Flowers.el.animate([{top: "9vh"}, {top: "100vh"}], {duration: 333, fill: "forwards", easing: "ease-in"});
 		setTimeout(() => {
 			Flowers.hide();
 		}, 334);
@@ -330,7 +330,7 @@ const ScreenParent = document.getElementById("ScreenParent");
 
 const HomeScreenBG = new Element(
 	"div",
-	{display: "flex", "justify-content": "center", "aligh-items": "center", width: "99vw", height: "99vh", "background-image": "url('files/images/cameraGlitch.jpg')"},
+	{display: "flex", "justify-content": "center", "aligh-items": "center", width: "100vw", height: "100vh", "background-image": "url('files/images/cameraGlitch.jpg')"},
 	ScreenParent,
 	`
 <div class='transparent flexColumnContainer'>
@@ -340,7 +340,7 @@ const HomeScreenBG = new Element(
 	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen)'>Credits</button>
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
-<img src="" width="50vw" height: "99vh" />
+<img src="" width="50vw" height: "100vh" />
 `
 );
 
@@ -352,7 +352,7 @@ HomeScreen.show();
 
 const CreditsScreenBG = new Element(
 	"div",
-	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "99vw", height: "99vh", "background-image": "url(files/images/cameraGlitch.jpg)"},
+	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "100vw", height: "100vh", "background-image": "url(files/images/cameraGlitch.jpg)"},
 	ScreenParent,
 	`
 	<p class='homeScreenText'>Credits</p>
@@ -362,7 +362,7 @@ const CreditsScreenBG = new Element(
 		<tr><td class='homeScreenText' style='text-align: center;'>Designer</td>
 		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
         <tr><td class='homeScreenText' style='text-align: center;'>Photos</td>
-		<td class='homeScreenText'><button class='homeScreenButton' onlick='window.open("https://www.facebook.com/zsmetarnow", "blank_")'>ZSME</button></td></tr>
+		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://www.facebook.com/zsmetarnow", "blank_")'>ZSME</button></td></tr>
 		<tr><td class='homeScreenText' style='text-align: center;'>Everything else</td>
 		<td class='homeScreenText'><button class='homeScreenButton' onclick='window.open("https://github.com/Evgen4X", "blank_")'>Evgen4X</button></td></tr>
 	</table>
@@ -376,7 +376,7 @@ const CreditsScreen = new Screen(CreditsScreenBG);
 
 const GameLoadingScreenBG = new Element(
 	"div",
-	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "99vw", height: "99vh", "background-color": "black"},
+	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "100vw", height: "100vh", "background-color": "black"},
 	ScreenParent,
 	`
 <p class="gameLoadingScreenText">12:00 AM</p>
@@ -390,7 +390,7 @@ const GameLoadingScreen = new Screen(GameLoadingScreenBG);
 
 const VictoryScreenBG = new Element(
 	"div",
-	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "99vw", height: "99vh", "background-color": "black"},
+	{display: "flex", "justify-content": "center", "align-items": "center", "flex-direction": "column", width: "100vw", height: "100vh", "background-color": "black"},
 	ScreenParent,
 	`<p class="gameLoadingScreenText">6:00 AM</p>
 	`
@@ -400,22 +400,32 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 
 //CAMERA SCREENS
 
-const CameraScreen = new Element("div", {position: "absolute", top: "0vh", transform: "rotateX(90deg)", width: "99vw", height: "200vh", "z-index": 999, border: "2vw solid #333333", "background-color": "black"}, ScreenParent);
+const CameraScreen = new Element("div", {position: "absolute", top: "0vh", transform: "rotateX(90deg)", width: "100vw", height: "200vh", "z-index": 999, border: "2vw solid #333333", "background-color": "black"}, ScreenParent);
 CameraScreen.hide();
 
-const CameraScreen01BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen01BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
+`);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
-const CameraScreen02BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen02BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
+`);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
-const CameraScreen03BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen03BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
+`);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
-const CameraScreen04BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen04BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
+`);
 const CameraScreen04 = new Screen(CameraScreen04BG);
 
-const CameraScreen05BG = new Element("div", {width: "99vw", height: "99vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "99vw 99vh"}, ScreenParent);
+const CameraScreen05BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
+`);
 const CameraScreen05 = new Screen(CameraScreen05BG);
 
 //CAMERA MANAGEMENT
@@ -444,7 +454,7 @@ Night.el.classList.add("gameText");
 
 const OfficeBG = new Element(
 	"div",
-	{"z-index": 0, width: "99vw", height: "99vh", "background-image": "url('files/images/OfficeBG.jpg')", "background-size": "99vw 99vh"},
+	{"z-index": 0, width: "100vw", height: "100vh", "background-image": "url('files/images/OfficeBG.jpg')", "background-size": "100vw 100vh"},
 	ScreenParent,
 	`
 	<div class="gameControlButton" id="doorOpenButton" style="top: 40vh; left: 70vw;" state="off" onclick="doorToggle();"></div>
@@ -487,7 +497,7 @@ CameraToggleButton.hide();
 
 //FLOWERS
 
-const Flowers = new Element("div", {"z-index": 10, position: "absolute", top: "99vh", left: "10vw", height: "90vh", width: "80vw", "background-image": "url(files/images/Flowers.png)", "background-size": "80vw 90vh"}, OfficeBG.el);
+const Flowers = new Element("div", {"z-index": 10, position: "absolute", top: "100vh", left: "10vw", height: "90vh", width: "80vw", "background-image": "url(files/images/Flowers.png)", "background-size": "80vw 90vh"}, OfficeBG.el);
 Flowers.hide();
 
 const FlowersToggleButton = new Element("div", {"z-index": 11, width: "25vw", height: "10vh", position: "absolute", top: "85vh", left: "71vw", "background-image": "url(files/images/cameraToggleButton.png)", "background-size": "25vw 10vh", filter: "invert(100%) sepia(10000%)"}, ScreenParent);
