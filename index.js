@@ -100,19 +100,23 @@ class Animatronic {
 
 	update() {
 		if (Math.random() < this.speed) {
+			console.log("u");
 			//TODO: add super-mega-complex formula on speed calculations
 			this.pos++;
-			if (this.pos == end) {
+			if (this.pos == this.end) {
 				this.jumpscare();
+				this.pos = 0;
 				return;
 			}
-			if(this.frames[this.pos].func != null){
+			else if(this.frames[this.pos].func != null){
 				this.frames[this.pos].func();
 			}
 		}
 	}
 
-	jumpscare() {} //TODO: do.
+	jumpscare() {
+		console.log("BOO");
+	} //TODO: do.
 }
 
 function newGame() {
@@ -436,6 +440,21 @@ const CameraScreen05BG = new Element("div", {width: "100vw", height: "100vh", "z
 `);
 const CameraScreen05 = new Screen(CameraScreen05BG);
 
+//ANIMATRONICS
+
+function CameraDoor04Phase(width){
+	CameraDoor04.el.style.width = width;
+	console.log(width);
+}
+
+const EnglartFrames = [
+	new Frame(6660, 0, "", "0vw", "0vh", "0vw", "0vh", null),
+	new Frame(6661, 1, "", "0vw", "0vh", "0vw", "0vh", () => {CameraDoor04Phase("3.7vw");}),
+	new Frame(6662, 2, "", "0vw", "0vh", "0vw", "0vh", () => {CameraDoor04Phase("3.4vw");})
+];
+const Englart = new Animatronic(666, EnglartFrames, 3, null, 0, 0);
+Englart.setSpeed(5);
+
 //CAMERA MANAGEMENT
 
 const CameraMap = new Element(
@@ -547,6 +566,9 @@ function GameLoop() {
 	Data.energy -= (usage == 1 ? 0.5 : usage) * 0.2;
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
 
+	//Animatronics cotrol
+	Englart.update();
+	
 	setTimeout(GameLoop, 25); //40 fps
 }
 
