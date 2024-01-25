@@ -64,7 +64,7 @@ class Screen {
 }
 
 class Frame {
-	constructor(id, n, img, posX, posY, width, height, func=null) {
+	constructor(id, n, img, posX, posY, width, height, func = null) {
 		this.id = id;
 		this.n = n;
 		this.image = img;
@@ -72,21 +72,23 @@ class Frame {
 		this.y = posY;
 		this.w = width;
 		this.h = height;
-		this.f = func;
+		this.func = func;
 	}
 
 	getElement(parent, innerHTML = "") {
-		return new Element("div", {position: "absolute", top: this.y + "vh", left: this.x + "vw", width: this.w + "vw", height: this.h + "vh", "background-image": `url(${this.img})`, "background-size": `${this.w}vw ${this.j}vh`}, parent, innerHTML);
+		return new Element("div", {position: "absolute", top: this.y, left: this.x, width: this.w, height: this.h, "background-image": this.image, "background-size": `${this.w} ${this.h}`}, parent, innerHTML);
 	}
 }
 
 class Animatronic {
-	constructor(id, frames, end, alternativeFrames = null, divergenceAt = 0, convergenceAt = 0) {
+	constructor(id, frames, end, jumpscareImg, alternativeFrames = null, divergenceAt = 0, convergenceAt = 0) {
 		this.id = id;
 		this.frames = frames;
 		this.speed = 0;
 		this.pos = 0;
 		this.end = end;
+		this.moved = 0;
+		this.jumpscareImg = jumpscareImg;
 		if (alternativeFrames != null) {
 			this.alternativeFrames = alternativeFrames;
 			this.divergenceAt = divergenceAt;
@@ -99,23 +101,31 @@ class Animatronic {
 	}
 
 	update() {
-		if (Math.random() < this.speed) {
-			console.log("u");
+		if (Math.random() < this.speed / 20000) {
 			//TODO: add super-mega-complex formula on speed calculations
+			console.log("u");
 			this.pos++;
+			this.moved++;
+			// if (this.pos > 2) {
+			// 	return;
+			// }
 			if (this.pos == this.end) {
 				this.jumpscare();
 				this.pos = 0;
-				return;
+				// return;
 			}
-			else if(this.frames[this.pos].func != null){
+			if (this.frames[this.pos].func != null) {
+				console.log(this.pos, "!!!");
 				this.frames[this.pos].func();
 			}
 		}
+		return this.frames[this.pos];
 	}
 
 	jumpscare() {
 		console.log("BOO");
+		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
+		JumpscareScreen.show();
 	} //TODO: do.
 }
 
@@ -412,48 +422,85 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 const CameraScreen = new Element("div", {position: "absolute", top: "0vh", transform: "rotateX(90deg)", width: "100vw", height: "200vh", "z-index": 999, border: "2vw solid #333333", "background-color": "black"}, ScreenParent);
 CameraScreen.hide();
 
-const CameraScreen01BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen01BG = new Element(
+	"div",
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "100vw 100vh"},
+	ScreenParent,
+	`
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`);
+`
+);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
-const CameraScreen02BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen02BG = new Element(
+	"div",
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"},
+	ScreenParent,
+	`
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`);
+`
+);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
-const CameraScreen03BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen03BG = new Element(
+	"div",
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "100vw 100vh"},
+	ScreenParent,
+	`
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`);
+`
+);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
-const CameraScreen04BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen04BG = new Element(
+	"div",
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"},
+	ScreenParent,
+	`
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`);
+`
+);
 
-const CameraDoor04 = new Element("div", {width: "4vw", height: "11.3vh", "z-index": 1, "background-image": "url(files/images/cameraDoor03.png)", "background-size": "4vw 11.3vh", position: "absolute", top: "30vh", left: "35.5vw"}, CameraScreen04BG.el); 
+const CameraDoor04 = new Element("div", {width: "4.1vw", height: "11.5vh", "z-index": 1, "background-image": "url(files/images/cameraDoor03.png)", "background-size": "4.1vw 11.5vh", position: "absolute", top: "29.9vh", left: "35.5vw"}, CameraScreen04BG.el);
 
 const CameraScreen04 = new Screen(CameraScreen04BG);
 
-const CameraScreen05BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"}, ScreenParent, `
+const CameraScreen05BG = new Element(
+	"div",
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"},
+	ScreenParent,
+	`
 <div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`);
+`
+);
 const CameraScreen05 = new Screen(CameraScreen05BG);
 
 //ANIMATRONICS
 
-function CameraDoor04Phase(width){
+function CameraDoor04Phase(width) {
 	CameraDoor04.el.style.width = width;
 	console.log(width);
 }
 
 const EnglartFrames = [
-	new Frame(6660, 0, "", "0vw", "0vh", "0vw", "0vh", null),
-	new Frame(6661, 1, "", "0vw", "0vh", "0vw", "0vh", () => {CameraDoor04Phase("3.7vw");}),
-	new Frame(6662, 2, "", "0vw", "0vh", "0vw", "0vh", () => {CameraDoor04Phase("3.4vw");})
+	new Frame(6660, 0, "", "0vw", "0vh", "0vw", "0vh", () => {
+		CameraDoor04Phase("4.1vw");
+	}),
+	new Frame(6661, 1, "", "0vw", "0vh", "0vw", "0vh", () => {
+		CameraDoor04Phase("3.4vw");
+	}),
+	new Frame(6662, 2, "url(files/images/EnglartPhase2.png)", "38vw", "30vh", "2.5vw", "2.5vh", () => {
+		CameraDoor04Phase("2.8vw");
+	}),
 ];
-const Englart = new Animatronic(666, EnglartFrames, 3, null, 0, 0);
-Englart.setSpeed(5);
+const Englart = new Animatronic(666, EnglartFrames, 3, "url(files/images/EnglartJumpscare1.png)", null, 0, 0);
+Englart.setSpeed(90);
+
+//JUMPSCARE SCREEN
+
+const JumpscareScreenBG = new Element("div", {position: "absolute", width: "100vw", height: "100vh", "z-index": 999, "background-repeat": "no-repeat", "background-position": "center", "background-size": "100vh 100vh"}, ScreenParent);
+
+const JumpscareScreen = new Screen(JumpscareScreenBG);
 
 //CAMERA MANAGEMENT
 
@@ -567,8 +614,14 @@ function GameLoop() {
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
 
 	//Animatronics cotrol
-	Englart.update();
-	
+	let frame = Englart.update();
+	if (Englart.moved > 0) {
+		Englart.moved--;
+		if (frame && frame.image) {
+			frame.getElement(CameraScreen04BG.el, ``);
+		}
+	}
+
 	setTimeout(GameLoop, 25); //40 fps
 }
 
