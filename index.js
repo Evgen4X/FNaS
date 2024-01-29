@@ -133,16 +133,16 @@ class Animatronic {
 			// 	return;
 			// }
 			if (this.pos == this.end) {
-				if(this.isBlocked()){
-					this.pos = 0;
-					console.log("ARGH")
-				} else {
-					this.jumpscare();
-					this.pos = 0;
+				// if(this.isBlocked()){
+					// this.pos = 0;
+					// console.log("ARGH")
+				// } else {
+					// this.jumpscare();
+					// this.pos = 0;
 				// return;
-				}
+				// }
 			}
-			if (this.frames[this.pos].func != null) {
+			if (this.frames[this.pos].func) {
 				console.log(this.pos, "!!!");
 				this.frames[this.pos].func();
 			}
@@ -154,7 +154,7 @@ class Animatronic {
 		console.log("BOO");
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
 		JumpscareScreen.show();
-		setTimeout(Lose, 334);
+		setTimeout(Lose, 1000);
 	} //TODO: do.
 }
 
@@ -295,11 +295,18 @@ function toggleCamera() {
 			CameraMap.show();
 			if(Data.cameraId == 3){
 				if(Englart.pos > 2){
-					Englart.cache.speed = Englart.speed;
-					Englart.setSpeed(100);
-					console.log(100);
+					let interval;
+					setTimeout(() => {
+						interval = setInterval(() => {if(!Englart.isBlocked()){
+							Englart.jumpscare();
+						} else {console.log("ARGHHGRA")}}, 40);
+					}, 1500);
+					setTimeout(() => {
+						window.clearInterval(interval);
+					}, 3500 + Math.random() * 1000);
 				}
-				adjSpeedBuff(Englart, -2);
+				adjSpeedBuff(Englart, -Math.sqrt(Englart.cache.lastTimeSeen) / 40);
+				console.log('Cache', -Math.sqrt(Englart.cache.lastTimeSeen) / 40, ' -> ', Englart.speedBuff);
 			}
 			CameraScreen.hide();
 		}, 333);
@@ -311,6 +318,10 @@ function toggleCamera() {
 		CameraScreen.el.animate([{transform: "rotateX(0deg)"}, {transform: "rotateX(90deg)"}], {duration: 333, easing: "ease-in"});
 		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 		CameraMap.hide();
+		if(Data.cameraId == 3){
+			Englart.cache.lastTimeSeen = 0;
+			console.log("!")
+		}
 		setTimeout(() => {
 			CameraScreen.hide();
 			FlowersToggleButton.show();
@@ -376,7 +387,7 @@ function Victory() {
 }
 
 function Lose(){
-	GlobalCache.night++;
+	GlobalCache.night = 0;
 	localStorage.setItem("FNaS_night", GlobalCache.night);
 	localStorage.setItem("FNaS_stars", GlobalCache.stars);
 	let button = document.getElementById("doorOpenButton");
@@ -598,9 +609,13 @@ const EnglartFrames = [
 ];
 const Englart = new Animatronic(666, EnglartFrames, 4, "url(files/images/EnglartJumpscare.png)", null, 0, 0);
 const EnglartImage = new Element("div", {}, CameraScreen04BG.el);
+Englart.cache.lastTimeSeen = 0;
 Englart.setSpeed(10);
 Englart.setBlockFunction(isDoorLocked);
-Englart.setUpdateFunction(() => {adjSpeedBuff(Englart, 0.01 * (Englart.speedBuff < 0 ? 12 : 1));});
+Englart.setUpdateFunction(() => {
+	adjSpeedBuff(Englart, 0.01 * (Englart.speedBuff < 0 ? 12 : 1));
+	Englart.cache.lastTimeSeen += 25;
+});
 Englart.setMoveFunction(() => {adjSpeedBuff(Englart, -1);});
 Englart.setUpdateBlockFunction(() => {return document.getElementById("cameraToggleButton").getAttribute('state') == 'off' || Data.cameraId != 3;});
 
