@@ -88,6 +88,7 @@ class Animatronic {
 		this.pos = 0;
 		this.end = end;
 		this.moved = 0;
+		this.speedBuff = 0;
 		this.cache = {};
 		this.jumpscareImg = jumpscareImg;
 		if (alternativeFrames != null) {
@@ -97,8 +98,20 @@ class Animatronic {
 		}
 	}
 
+	setUpdateFunction(func){
+		this.updateFunc = func
+	}
+
+	setMoveFunction(func){
+		this.moveFunc = func;
+	}
+
 	setBlockFunction(func){
 		this.isBlocked = func;
+	}
+
+	setUpdateBlockFunction(func){
+		this.canUpdate = func;
 	}
 
 	setSpeed(speed) {
@@ -106,9 +119,14 @@ class Animatronic {
 	}
 
 	update() {
-		if (Math.random() < this.speed / 20000) {
+		if(this.updateFunc){
+			this.updateFunc();
+		}
+		if (Math.random() < (this.speed + this.speedBuff) / 20000 && this.canUpdate()) {
 			//TODO: add super-mega-complex formula on speed calculations
-			console.log("u");
+			if(this.moveFunc){
+				this.moveFunc();
+			}
 			this.pos++;
 			this.moved++;
 			// if (this.pos > 2) {
@@ -136,6 +154,7 @@ class Animatronic {
 		console.log("BOO");
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
 		JumpscareScreen.show();
+		setTimeout(Lose, 334);
 	} //TODO: do.
 }
 
@@ -276,15 +295,16 @@ function toggleCamera() {
 			CameraMap.show();
 			if(Data.cameraId == 3){
 				if(Englart.pos > 2){
-					console.log("GGWP");
 					Englart.cache.speed = Englart.speed;
 					Englart.setSpeed(100);
 					console.log(100);
 				}
+				adjSpeedBuff(Englart, -2);
 			}
 			CameraScreen.hide();
 		}, 333);
 	} else {
+		console.log(Englart.speedBuff);
 		Data.usage--;
 		button.setAttribute("state", "off");
 		CameraScreen.show();
@@ -352,6 +372,50 @@ function Victory() {
 		setTimeout(() => {
 			switchScreens(VictoryScreen, HomeScreen);
 		}, 2000);
+	}, 337);
+}
+
+function Lose(){
+	GlobalCache.night++;
+	localStorage.setItem("FNaS_night", GlobalCache.night);
+	localStorage.setItem("FNaS_stars", GlobalCache.stars);
+	let button = document.getElementById("doorOpenButton");
+	if (button.getAttribute("state") == "on") {
+		doorToggle();
+	}
+	button = document.getElementById("windowOpenButton");
+	if (button.getAttribute("state") == "on") {
+		windowToggle();
+	}
+	button = document.getElementById("doorDarkRect");
+	if (button.style.opacity == 0) {
+		doorLight();
+	}
+	button = document.getElementById("windowDarkRect");
+	if (button.style.opacity == 0) {
+		windowLight();
+	}
+	button = document.getElementById("cameraToggleButton");
+	if (button.getAttribute("state") == "on") {
+		toggleCamera();
+	}
+	button = document.getElementById("flowersToggleButton");
+	if (button.getAttribute("state") == "on") {
+		toggleFlowers();
+	}
+	setTimeout(() => {
+		Data.time = 0;
+		Data.cameraId = 0;
+		Data.energy = 5000;
+		CameraToggleButton.hide();
+		FlowersToggleButton.hide();
+		EnergyBar.hide();
+		EnergyLevel.hide();
+		Time.hide();
+		Night.hide();
+		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
+		JumpscareScreen.hide();
+		switchScreens(GameScreen, HomeScreen);
 	}, 337);
 }
 
@@ -504,6 +568,10 @@ function isDoorLocked(){
 	return document.getElementById("doorOpenButton").getAttribute("state") == 'on';
 }
 
+function adjSpeedBuff(who, how){
+	who.speedBuff += how;
+}
+
 const EnglartFrames = [
 	new Frame(6660, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
 		CameraDoor04Phase("4.1vw");
@@ -532,6 +600,9 @@ const Englart = new Animatronic(666, EnglartFrames, 4, "url(files/images/Englart
 const EnglartImage = new Element("div", {}, CameraScreen04BG.el);
 Englart.setSpeed(10);
 Englart.setBlockFunction(isDoorLocked);
+Englart.setUpdateFunction(() => {adjSpeedBuff(Englart, 0.01 * (Englart.speedBuff < 0 ? 12 : 1));});
+Englart.setMoveFunction(() => {adjSpeedBuff(Englart, -1);});
+Englart.setUpdateBlockFunction(() => {return document.getElementById("cameraToggleButton").getAttribute('state') == 'off' || Data.cameraId != 3;});
 
 //JUMPSCARE SCREEN
 
@@ -653,14 +724,11 @@ function GameLoop() {
 	//Animatronics cotrol
 	let frame = Englart.update();
 	if (Englart.moved > 0) {
-		console.log(frame);
 		Englart.moved--;
 		if (frame && frame.image) {
-			console.log(frame.getElement())
 			for (let property in frame.getElement().el.style) {
 				// if(frame.getElement().el.style[property]){
 					EnglartImage.el.style[property] = frame.getElement().el.style[property];
-					console.log(property, frame.getElement().el.style[property], '', EnglartImage.el.style[property]);
 				// }
 			}
 		}
@@ -676,3 +744,4 @@ if (previousNight) {
 	GlobalCache.night = previousNight;
 	document.getElementById("nightNumber").innerHTML = orderedNumberOf[previousNight - 1] + " NIGHT";
 }
+
