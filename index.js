@@ -787,6 +787,7 @@ function GameLoop() {
 		Marionette.cache.charge = Math.min(Marionette.cache.charge, 1000);
 	} else {
 		Marionette.cache.charge -= (Marionette.speed + 10) / 15;
+		Marionette.cacha.charge = Math.max(Marionette.cache.charge, 0);
 	}
 	
 	let frame = Foxy.update();
