@@ -154,16 +154,16 @@ class Animatronic {
 		console.log("BOO");
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
 		JumpscareScreenBG.el.animate([
-			{transform: "translate(2vw, -2vw)"},
-			{transform: "translate(-4vw, 4vw)"},
-			{transform: "translate(4vw, -4vw)"},
-			{transform: "translate(4vw, 4vw)"},
-			{transform: "translate(-4vw, 4vw)"},
-			{transform: "translate(4vw, -4vw)"},
-			{transform: "translate(-4vw, -4vw)"},
-			{transform: "translate(-4vw, 2)"},
-			{transform: "translate(4vw, -4vw)"},
-			{transform: "translate(-2vw, 2vw)"}
+			{transform: "translate(3vw, -3vw)"},
+			{transform: "translate(-6vw, 6vw)"},
+			{transform: "translate(6vw, -6vw)"},
+			{transform: "translate(6vw, 6vw)"},
+			{transform: "translate(-6vw, 6vw)"},
+			{transform: "translate(6vw, -6vw)"},
+			{transform: "translate(-6vw, -6vw)"},
+			{transform: "translate(-6vw, 6vw)"},
+			{transform: "translate(6vw, -6vw)"},
+			{transform: "translate(-3vw, 3vw)"}
 		], {duration: 1000});
 		JumpscareScreen.show();
 		setTimeout(Lose, 1000);
