@@ -153,6 +153,18 @@ class Animatronic {
 	jumpscare() {
 		console.log("BOO");
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
+		JumpscareScreenBG.el.animate([
+			{transform: "translate(2vw, -2vw)"},
+			{transform: "translate(-4vw, 4vw)"},
+			{transform: "translate(4vw, -4vw)"},
+			{transform: "translate(4vw, 4vw)"},
+			{transform: "translate(-4vw, 4vw)"},
+			{transform: "translate(4vw, -4vw)"},
+			{transform: "translate(-4vw, -4vw)"},
+			{transform: "translate(-4vw, 2)"},
+			{transform: "translate(4vw, -4vw)"},
+			{transform: "translate(-2vw, 2vw)"}
+		], {duration: 1000});
 		JumpscareScreen.show();
 		setTimeout(Lose, 1000);
 	} //TODO: do.
@@ -293,6 +305,7 @@ function toggleCamera() {
 		setTimeout(() => {
 			switchScreens(GameScreen, getCameraScreen(Data.cameraId));
 			CameraMap.show();
+			CameraRecordingCircle.show();
 			if(Data.cameraId == 3){
 				if(Englart.pos > 2){
 					let interval;
@@ -318,6 +331,7 @@ function toggleCamera() {
 		CameraScreen.el.animate([{transform: "rotateX(0deg)"}, {transform: "rotateX(90deg)"}], {duration: 333, easing: "ease-in"});
 		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 		CameraMap.hide();
+		CameraRecordingCircle.hide();
 		if(Data.cameraId == 3){
 			Englart.cache.lastTimeSeen = 0;
 			console.log("!")
@@ -387,7 +401,6 @@ function Victory() {
 }
 
 function Lose(){
-	GlobalCache.night = 0;
 	localStorage.setItem("FNaS_night", GlobalCache.night);
 	localStorage.setItem("FNaS_stars", GlobalCache.stars);
 	let button = document.getElementById("doorOpenButton");
@@ -427,6 +440,7 @@ function Lose(){
 		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
 		JumpscareScreen.hide();
 		switchScreens(GameScreen, HomeScreen);
+		window.location.reload();
 	}, 337);
 }
 
@@ -517,42 +531,26 @@ CameraScreen.hide();
 
 const CameraScreen01BG = new Element(
 	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.jpg)", "background-size": "100vw 100vh"},
-	ScreenParent,
-	`
-<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`
-);
+	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.png)", "background-size": "100vw 100vh"},
+	ScreenParent);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
 const CameraScreen02BG = new Element(
 	"div",
 	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"},
-	ScreenParent,
-	`
-<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`
-);
+	ScreenParent);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
 const CameraScreen03BG = new Element(
 	"div",
 	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "100vw 100vh"},
-	ScreenParent,
-	`
-<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`
-);
+	ScreenParent);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
 const CameraScreen04BG = new Element(
 	"div",
 	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"},
-	ScreenParent,
-	`
-<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`
-);
+	ScreenParent);
 
 const CameraDoor04 = new Element("div", {width: "4.1vw", height: "11.5vh", "z-index": 1, "background-image": "url(files/images/cameraDoor03.png)", "background-size": "4.1vw 11.5vh", position: "absolute", top: "29.9vh", left: "35.5vw"}, CameraScreen04BG.el);
 
@@ -561,12 +559,23 @@ const CameraScreen04 = new Screen(CameraScreen04BG);
 const CameraScreen05BG = new Element(
 	"div",
 	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"},
-	ScreenParent,
-	`
-<div class="cameraRecordingCircle" style="z-index: 4; background-color: #f00; border-radius: 50%; width: 5vw; height: 5vw; position: absolute; top: 3vw; left: 3vw;"></div>
-`
-);
+	ScreenParent);
 const CameraScreen05 = new Screen(CameraScreen05BG);
+
+const CameraRecordingCircle = new Element("div", {"z-index":4, "background-color":"#f00", "border-radius": "50%", width: "4vw", height: "4vw", position: "absolute", top: "3vw", left: "3vw"}, ScreenParent);
+CameraRecordingCircle.hide();
+CameraRecordingCircle.el.animate([
+	{opacity: 1},
+	{opacity: 1},
+	{opacity: 1},
+	{opacity: 1},
+	{opacity: 1},
+	{opacity: 0},
+	{opacity: 0},
+	{opacity: 0},
+	{opacity: 0},
+	{opacity: 0},
+], {duration: 1000, direction: "alternate", iterations: Infinity});
 
 //ANIMATRONICS
 
@@ -610,7 +619,7 @@ const EnglartFrames = [
 const Englart = new Animatronic(666, EnglartFrames, 4, "url(files/images/EnglartJumpscare.png)", null, 0, 0);
 const EnglartImage = new Element("div", {}, CameraScreen04BG.el);
 Englart.cache.lastTimeSeen = 0;
-Englart.setSpeed(10);
+Englart.setSpeed(5);
 Englart.setBlockFunction(isDoorLocked);
 Englart.setUpdateFunction(() => {
 	adjSpeedBuff(Englart, 0.01 * (Englart.speedBuff < 0 ? 12 : 1));
