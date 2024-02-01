@@ -607,7 +607,7 @@ const MarionetteFrames = [
 			MarionetteImage.el.style.width = "0vw";
 		}
 	}),
-	new Frame(12, 1, null, "0vw", "0vh", "0vw", "0vh", null), //TODO: image
+	new Frame(12, 1, null, "0vw", "0vh", "0vw", "0vh", null),
 	new Frame(13, 2, null, "0vw", "0vh", "0vw", "0vh", null),
 	new Frame(14, 3, null, "0vw", "0vh", "0vw", "0vh", () => {
 		if (MarionetteImage.el.style["background-image"]) {
@@ -645,7 +645,7 @@ const MarionetteFrames = [
 						Marionette.cache.charge = 1000;
 						MarionetteReadyToGetIn = null;
 					}, Math.random() * 2000 + 3000);
-				}, Math.random() * 1000 + 1000);
+				}, 1000 - Marionette.speed * 10);
 				window.clearInterval(interval);
 			}
 		}, 25);
@@ -656,7 +656,7 @@ const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/Mar
 var MarionetteReadyToGetIn = null;
 const MarionetteImage = new Element("div", {}, CameraScreen05BG.el);
 Marionette.cache.charge = 1000;
-Marionette.setSpeed(50);
+Marionette.setSpeed(5);
 Marionette.setUpdateBlockFunction(() => {
 	return Marionette.cache.charge / 1000 > Math.random();
 });
