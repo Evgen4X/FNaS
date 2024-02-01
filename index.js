@@ -98,19 +98,19 @@ class Animatronic {
 		}
 	}
 
-	setUpdateFunction(func){
-		this.updateFunc = func
+	setUpdateFunction(func) {
+		this.updateFunc = func;
 	}
 
-	setMoveFunction(func){
+	setMoveFunction(func) {
 		this.moveFunc = func;
 	}
 
-	setBlockFunction(func){
+	setBlockFunction(func) {
 		this.isBlocked = func;
 	}
 
-	setUpdateBlockFunction(func){
+	setUpdateBlockFunction(func) {
 		this.canUpdate = func;
 	}
 
@@ -119,26 +119,22 @@ class Animatronic {
 	}
 
 	update() {
-		if(this.updateFunc){
+		if (this.updateFunc) {
 			this.updateFunc();
 		}
 		if (Math.random() < (this.speed + this.speedBuff) / 20000 && this.canUpdate()) {
-			//TODO: add super-mega-complex formula on speed calculations
-			if(this.moveFunc){
+			if (this.moveFunc) {
 				this.moveFunc();
 			}
 			this.pos++;
 			this.moved++;
-			// if (this.pos > 2) {
-			// 	return;
-			// }
 			if (this.pos == this.end) {
 				// if(this.isBlocked()){
-					// this.pos = 0;
-					// console.log("ARGH")
+				// this.pos = 0;
+				// console.log("ARGH")
 				// } else {
-					// this.jumpscare();
-					// this.pos = 0;
+				// this.jumpscare();
+				// this.pos = 0;
 				// return;
 				// }
 			}
@@ -177,18 +173,7 @@ class Animatronic {
 			toggleFlowers();
 		}
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
-		JumpscareScreenBG.el.animate([
-			{transform: "translate(3vw, -3vw)"},
-			{transform: "translate(-6vw, 6vw)"},
-			{transform: "translate(6vw, -6vw)"},
-			{transform: "translate(6vw, 6vw)"},
-			{transform: "translate(-6vw, 6vw)"},
-			{transform: "translate(6vw, -6vw)"},
-			{transform: "translate(-6vw, -6vw)"},
-			{transform: "translate(-6vw, 6vw)"},
-			{transform: "translate(6vw, -6vw)"},
-			{transform: "translate(-3vw, 3vw)"}
-		], {duration: 1000});
+		JumpscareScreenBG.el.animate([{transform: "translate(3vw, -3vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-3vw, 3vw)"}], {duration: 1000});
 		JumpscareScreen.show();
 		setTimeout(Lose, 1000);
 	} //TODO: do.
@@ -330,35 +315,40 @@ function toggleCamera() {
 			switchScreens(GameScreen, getCameraScreen(Data.cameraId));
 			CameraMap.show();
 			CameraRecordingCircle.show();
-			if(Data.cameraId == 3){
-				if(Foxy.pos > 2){
+			if (Data.cameraId == 3) {
+				if (Foxy.pos > 2) {
 					let interval;
 					setTimeout(() => {
-						interval = setInterval(() => {if(!Foxy.isBlocked()){
-							Foxy.jumpscare();
-						} else {console.log("ARGHHGRA")}}, 40);
+						interval = setInterval(() => {
+							if (!Foxy.isBlocked()) {
+								Foxy.jumpscare();
+							}
+						}, 40);
 					}, 1500);
 					setTimeout(() => {
 						window.clearInterval(interval);
 					}, 3500 + Math.random() * 1000);
 				}
 				adjSpeedBuff(Foxy, -Math.sqrt(Foxy.cache.lastTimeSeen) / 40);
-				console.log('Cache', -Math.sqrt(Foxy.cache.lastTimeSeen) / 40, ' -> ', Foxy.speedBuff);
+				console.log("Cache", -Math.sqrt(Foxy.cache.lastTimeSeen) / 40, " -> ", Foxy.speedBuff);
 			}
 			CameraScreen.hide();
 		}, 333);
 	} else {
 		console.log(Foxy.speedBuff);
 		Data.usage--;
+		if (MarionetteReadyToGetIn == false) {
+			MarionetteReadyToGetIn = true;
+		}
 		button.setAttribute("state", "off");
 		CameraScreen.show();
 		CameraScreen.el.animate([{transform: "rotateX(0deg)"}, {transform: "rotateX(90deg)"}], {duration: 333, easing: "ease-in"});
 		switchScreens(getCameraScreen(Data.cameraId), GameScreen);
 		CameraMap.hide();
 		CameraRecordingCircle.hide();
-		if(Data.cameraId == 3){
+		if (Data.cameraId == 3) {
 			Foxy.cache.lastTimeSeen = 0;
-			console.log("!")
+			console.log("!");
 		}
 		setTimeout(() => {
 			CameraScreen.hide();
@@ -424,7 +414,7 @@ function Victory() {
 	}, 337);
 }
 
-function Lose(){
+function Lose() {
 	localStorage.setItem("FNaS_night", GlobalCache.night);
 	localStorage.setItem("FNaS_stars", GlobalCache.stars);
 	setTimeout(() => {
@@ -529,53 +519,27 @@ const VictoryScreen = new Screen(VictoryScreenBG);
 const CameraScreen = new Element("div", {position: "absolute", top: "0vh", transform: "rotateX(90deg)", width: "100vw", height: "200vh", "z-index": 999, border: "2vw solid #333333", "background-color": "black"}, ScreenParent);
 CameraScreen.hide();
 
-const CameraScreen01BG = new Element(
-	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.png)", "background-size": "100vw 100vh"},
-	ScreenParent);
+const CameraScreen01BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen01.png)", "background-size": "100vw 100vh"}, ScreenParent);
 const CameraScreen01 = new Screen(CameraScreen01BG);
 
-const CameraScreen02BG = new Element(
-	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"},
-	ScreenParent);
+const CameraScreen02BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen02.jpg)", "background-size": "100vw 100vh"}, ScreenParent);
 const CameraScreen02 = new Screen(CameraScreen02BG);
 
-const CameraScreen03BG = new Element(
-	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "100vw 100vh"},
-	ScreenParent);
+const CameraScreen03BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen03.png)", "background-size": "100vw 100vh"}, ScreenParent);
 const CameraScreen03 = new Screen(CameraScreen03BG);
 
-const CameraScreen04BG = new Element(
-	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"},
-	ScreenParent);
+const CameraScreen04BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen04.png)", "background-size": "100vw 100vh"}, ScreenParent);
 
 const CameraDoor04 = new Element("div", {width: "4.1vw", height: "11.5vh", "z-index": 1, "background-image": "url(files/images/cameraDoor03.png)", "background-size": "4.1vw 11.5vh", position: "absolute", top: "29.9vh", left: "35.5vw"}, CameraScreen04BG.el);
 
 const CameraScreen04 = new Screen(CameraScreen04BG);
 
-const CameraScreen05BG = new Element(
-	"div",
-	{width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"},
-	ScreenParent);
+const CameraScreen05BG = new Element("div", {width: "100vw", height: "100vh", "z-index": 0, "background-image": "url(files/images/cameraScreen05.jpg)", "background-size": "100vw 100vh"}, ScreenParent);
 const CameraScreen05 = new Screen(CameraScreen05BG);
 
-const CameraRecordingCircle = new Element("div", {"z-index":4, "background-color":"#f00", "border-radius": "50%", width: "4vw", height: "4vw", position: "absolute", top: "3vw", left: "3vw"}, ScreenParent);
+const CameraRecordingCircle = new Element("div", {"z-index": 4, "background-color": "#f00", "border-radius": "50%", width: "4vw", height: "4vw", position: "absolute", top: "3vw", left: "3vw"}, ScreenParent);
 CameraRecordingCircle.hide();
-CameraRecordingCircle.el.animate([
-	{opacity: 1},
-	{opacity: 1},
-	{opacity: 1},
-	{opacity: 1},
-	{opacity: 1},
-	{opacity: 0},
-	{opacity: 0},
-	{opacity: 0},
-	{opacity: 0},
-	{opacity: 0},
-], {duration: 1000, direction: "alternate", iterations: Infinity});
+CameraRecordingCircle.el.animate([{opacity: 1}, {opacity: 1}, {opacity: 1}, {opacity: 1}, {opacity: 1}, {opacity: 0}, {opacity: 0}, {opacity: 0}, {opacity: 0}, {opacity: 0}], {duration: 1000, direction: "alternate", iterations: Infinity});
 
 //ANIMATRONICS
 
@@ -584,11 +548,11 @@ function CameraDoor04Phase(width) {
 	console.log(width);
 }
 
-function isDoorLocked(){
-	return document.getElementById("doorOpenButton").getAttribute("state") == 'on';
+function isDoorLocked() {
+	return document.getElementById("doorOpenButton").getAttribute("state") == "on";
 }
 
-function adjSpeedBuff(who, how){
+function adjSpeedBuff(who, how) {
 	who.speedBuff += how;
 }
 
@@ -597,9 +561,9 @@ function adjSpeedBuff(who, how){
 const FoxyFrames = [
 	new Frame(6660, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
 		CameraDoor04Phase("4.1vw");
-		if(FoxyImage.el.style['background-image']){
-			FoxyImage.el.style['background-image'] = null;
-			FoxyImage.el.style.width = '0vw';
+		if (FoxyImage.el.style["background-image"]) {
+			FoxyImage.el.style["background-image"] = null;
+			FoxyImage.el.style.width = "0vw";
 		}
 		Foxy.setSpeed(Foxy.cache.speed);
 		console.log(Foxy.speed);
@@ -610,13 +574,13 @@ const FoxyFrames = [
 	new Frame(6662, 2, "url(files/images/FoxyPhase2.png)", "38vw", "30vh", "2.5vw", "2.5vh", () => {
 		CameraDoor04Phase("2.8vw");
 	}),
-	new Frame(6663, 3, null, '0vw', '0vh', '0vw', '0vh', () => {
+	new Frame(6663, 3, null, "0vw", "0vh", "0vw", "0vh", () => {
 		CameraDoor04Phase("1.5vw");
-		if(FoxyImage.el.style['background-image']){
-			FoxyImage.el.style['background-image'] = null;
-			FoxyImage.el.style.width = '0vw';
+		if (FoxyImage.el.style["background-image"]) {
+			FoxyImage.el.style["background-image"] = null;
+			FoxyImage.el.style.width = "0vw";
 		}
-	})
+	}),
 ];
 const Foxy = new Animatronic(666, FoxyFrames, 4, "url(files/images/FoxyJumpscare.png)", null, 0, 0);
 const FoxyImage = new Element("div", {}, CameraScreen04BG.el);
@@ -627,39 +591,122 @@ Foxy.setUpdateFunction(() => {
 	adjSpeedBuff(Foxy, 0.01 * (Foxy.speedBuff < 0 ? 12 : 1));
 	Foxy.cache.lastTimeSeen += 25;
 });
-Foxy.setMoveFunction(() => {adjSpeedBuff(Foxy, -1);});
-Foxy.setUpdateBlockFunction(() => {return document.getElementById("cameraToggleButton").getAttribute('state') == 'off' || Data.cameraId != 3;});
+Foxy.setMoveFunction(() => {
+	adjSpeedBuff(Foxy, -1);
+});
+Foxy.setUpdateBlockFunction(() => {
+	return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 3;
+});
 
 /* MARIONETTE */
 
 const MarionetteFrames = [
 	new Frame(11, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
-		if(MarionetteImage.el.style['background-image']){
-			MarionetteImage.el.style['background-image'] = null;
-			MarionetteImage.el.style.width = '0vw';
+		if (MarionetteImage.el.style["background-image"]) {
+			MarionetteImage.el.style["background-image"] = null;
+			MarionetteImage.el.style.width = "0vw";
 		}
 	}),
 	new Frame(12, 1, null, "0vw", "0vh", "0vw", "0vh", null), //TODO: image
 	new Frame(13, 2, null, "0vw", "0vh", "0vw", "0vh", null),
 	new Frame(14, 3, null, "0vw", "0vh", "0vw", "0vh", () => {
-		if(MarionetteImage.el.style['background-image']){
-			MarionetteImage.el.style['background-image'] = null;
-			MarionetteImage.el.style.width = '0vw';
+		if (MarionetteImage.el.style["background-image"]) {
+			MarionetteImage.el.style["background-image"] = null;
+			MarionetteImage.el.style.width = "0vw";
 		}
-	})
+		MarionetteReadyToGetIn = false;
+		console.log("Waiting...");
+		let interval = setInterval(() => {
+			if (MarionetteReadyToGetIn) {
+				MarionetteOfficeImage.show();
+				Marionette.pos = -1;
+				setTimeout(() => {
+					let newInterval = setInterval(() => {
+						if (FlowersToggleButton.el.getAttribute("state") == "off") {
+							Marionette.jumpscare();
+							window.clearInterval(newInterval);
+						}
+					}, 300);
+					setTimeout(() => {
+						window.clearInterval(newInterval);
+						Marionette.pos = 0;
+						MarionetteOfficeImage.hide();
+						document.getElementById("holdToChargeButton").style["font-size"] = "xx-large";
+						document.getElementById("holdToChargeButton").innerHTML = "HOLD TO CHARGE";
+						let button = MarionetteChargeButton.el;
+						button.style.width = "15vw";
+						button.onmousedown = () => {
+							Marionette.cache.held = true;
+						};
+						button.onmouseup = () => {
+							Marionette.cache.held = false;
+						};
+						button.style["background-color"] = "#555";
+						Marionette.cache.charge = 1000;
+						MarionetteReadyToGetIn = null;
+					}, Math.random() * 2000 + 3000);
+				}, Math.random() * 1000 + 1000);
+				window.clearInterval(interval);
+			}
+		}, 25);
+	}),
 ];
 
-const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/MarionetteJumpscare.png)", null, null, null)
+const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/MarionetteJumpscare.png)", null, null, null);
+var MarionetteReadyToGetIn = null;
 const MarionetteImage = new Element("div", {}, CameraScreen05BG.el);
 Marionette.cache.charge = 1000;
-Marionette.setSpeed(5);
-Marionette.setUpdateBlockFunction(() => {return Marionette.cache.charge / 1000 > Math.random()});
+Marionette.setSpeed(50);
+Marionette.setUpdateBlockFunction(() => {
+	return Marionette.cache.charge / 1000 > Math.random();
+});
 
-const MarionetteChargeButton = new Element("div", {position: "absolute", width: "15vw", height: "5vh", "z-index": 2, top: "70vh", left: "40vw", 'background-color': "#666", 'border': '0.5vw solid white'}, CameraScreen05BG.el, `
-<div>HOLD TO CHARGE</div>
-`);
-MarionetteChargeButton.el.onmousedown = () => {Marionette.cache.held = true;};
-MarionetteChargeButton.el.onmouseup = () => {Marionette.cache.held = false;};
+function MarionetteChargeButtonSetSize(level) {
+	if (level <= 5) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "xx-large";
+		document.getElementById("holdToChargeButton").innerHTML = "FAREWELL";
+		let button = MarionetteChargeButton.el;
+		button.style.width = "15vw";
+		button.onmousedown = null;
+		button.onmouseup = null;
+		button.style["background-color"] = "#333";
+		if (MarionetteReadyToGetIn == null) {
+			MarionetteReadyToGetIn = false;
+			setTimeout(() => {
+				Marionette.pos = 3;
+				Marionette.frames[3].func();
+			}, Math.random() * 10000 + 5000);
+		}
+	} else if (level < 300) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "x-small";
+	} else if (level < 400) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "small";
+	} else if (level < 600) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "medium";
+	} else if (level < 800) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "large";
+	} else if (level < 990) {
+		document.getElementById("holdToChargeButton").style["font-size"] = "x-large";
+	} else {
+		document.getElementById("holdToChargeButton").style["font-size"] = "xx-large";
+	}
+}
+
+const MarionetteChargeButton = new Element(
+	"div",
+	{position: "absolute", width: "15vw", height: "5vh", "z-index": 2, top: "70vh", left: "40vw", "background-color": "#666", border: "0.5vw solid white"},
+	CameraScreen05BG.el,
+	`
+<div class='gameText' id='holdToChargeButton'>HOLD TO CHARGE</div>
+`
+);
+MarionetteChargeButton.el.onmousedown = () => {
+	Marionette.cache.held = true;
+};
+MarionetteChargeButton.el.onmouseup = () => {
+	Marionette.cache.held = false;
+};
+
 //JUMPSCARE SCREEN
 
 const JumpscareScreenBG = new Element("div", {position: "absolute", width: "100vw", height: "100vh", "z-index": 999, "background-repeat": "no-repeat", "background-position": "center", "background-size": "100vh 100vh"}, ScreenParent);
@@ -703,6 +750,10 @@ const OfficeBG = new Element(
 	<div class="gameDarkRect" id="windowDarkRect" style="opacity: 1; top: 23vh; left: 17vw; width: 11vw; height: 30vh;" onclick="windowLight()";></div>
 	`
 );
+
+/*ADDING MARIONETTE IMAGE*/
+const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
+MarionetteOfficeImage.hide();
 
 const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
 OfficeWindowView.el.id = "officeWindowVeiw";
@@ -778,24 +829,26 @@ function GameLoop() {
 	Data.energy -= (usage == 1 ? 0.5 : usage) * 0.2;
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
 
-	MarionetteChargeButton.el.style.width = (Math.round(Marionette.cache.charge) / 50) + 'vw';
+	MarionetteChargeButton.el.style.width = Math.round(Marionette.cache.charge) / 50 + "vw";
 
 	//Animatronics cotrol
 
-	if(Marionette.cache.held){
+	Marionette.update();
+	if (Marionette.cache.held) {
 		Marionette.cache.charge += 8;
 		Marionette.cache.charge = Math.min(Marionette.cache.charge, 1000);
 	} else {
 		Marionette.cache.charge -= (Marionette.speed + 10) / 15;
-		Marionette.cacha.charge = Math.max(Marionette.cache.charge, 0);
+		Marionette.cache.charge = Math.max(Marionette.cache.charge, 0);
 	}
-	
+	MarionetteChargeButtonSetSize(Marionette.cache.charge);
+
 	let frame = Foxy.update();
 	if (Foxy.moved > 0) {
 		Foxy.moved--;
 		if (frame && frame.image) {
 			for (let property in frame.getElement().el.style) {
-					FoxyImage.el.style[property] = frame.getElement().el.style[property];
+				FoxyImage.el.style[property] = frame.getElement().el.style[property];
 			}
 		}
 	}
