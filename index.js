@@ -459,7 +459,8 @@ const HomeScreenBG = new Element(
 	<p class='homeScreenText'>Fife<br>Nights<br>at<br>Szuj</p>
 	<button class='homeScreenButton' onclick='play()'>Play</button>
 	<button class='homeScreenButton' onclick='newGame()'>New game</button>
-	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen)'>Credits</button>
+    <button class='homeScreenButton' onclick='switchScreens(HomeScreen, CustomNightScreen);'>Custom night</button>
+	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen);'>Credits</button>
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
 <img src="" width="50vw" height: "100vh" />
@@ -870,6 +871,12 @@ FlowersToggleButton.hide();
 const OfficeFG = new Element("div", {"z-index": 4, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
 
 const GameScreen = new Screen(OfficeBG, OfficeFG);
+
+// CUSTOM NIGHT SCREEN
+const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0, height: "100vh", width: "100vw", "background-image": "url(files/images/cameraGlitch.jpg)"}, ScreenParent, `
+<div id='customNightContainer'></div>
+<button class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+`);
 
 function GameLoop() {
 	//Time control
