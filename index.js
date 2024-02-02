@@ -758,7 +758,7 @@ const BonnyFrames = [
 ];
 
 const Bonny = new Animatronic(9, BonnyFrames, 4, "url(files/images/BonnyJumpscare.png)", null, null, null);
-Bonny.setSpeed(50);
+Bonny.setSpeed(5);
 Bonny.setUpdateBlockFunction(() => {
 	switch (Bonny.pos) {
 		case 1:
