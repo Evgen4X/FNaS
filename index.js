@@ -773,6 +773,21 @@ Bonny.setUpdateBlockFunction(() => {
 	}
 });
 
+/* CHICA */
+
+const ChicaFrames = [
+	new Frame(50, 0, null, "0vw", "0vh", "0vw", "0vh", null, () => {
+		if (ChicaImage.el.style["background-image"]) {
+			ChicaImage.el.style["background-image"] = null;
+			ChicaImage.el.style.width = "0vw";
+		}
+	}),
+	
+];
+
+const Chica = new Animatronic(5, ChicaFrames, "url(files/images/ChicaJumpscare.png)", null, null, null);
+Chica.setSpeed(5);
+
 //JUMPSCARE SCREEN
 
 const JumpscareScreenBG = new Element("div", {position: "absolute", width: "100vw", height: "100vh", "z-index": 999, "background-repeat": "no-repeat", "background-position": "center", "background-size": "100vh 100vh"}, ScreenParent);
@@ -822,6 +837,13 @@ const BonnyImage03 = new Element("div", {position: "absolute", top: "10vh", left
 const BonnyImage01 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen01BG.el);
 const BonnyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
 BonnyImage.hide();
+
+/*ADDING CHICA IMAGE*/
+const ChucaImage03 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, OfficeBG.el);
+const ChicaImage01 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, OfficeBG.el);
+const ChicaImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
+BonnyImage.hide();
+
 
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
