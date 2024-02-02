@@ -874,7 +874,11 @@ const GameScreen = new Screen(OfficeBG, OfficeFG);
 
 // CUSTOM NIGHT SCREEN
 const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0, height: "100vh", width: "100vw", "background-image": "url(files/images/cameraGlitch.jpg)"}, ScreenParent, `
-<div id='customNightContainer'></div>
+<div id='customNightContainer'>
+<div class='customNightHolder'></div>
+<div class='customNightHolder'></div>
+<div class='customNightHolder'></div>
+</div>
 <button class='homeScreenButton' onclick='customNightPlay()'>Play</button>
 `);
 
