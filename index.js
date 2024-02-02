@@ -877,12 +877,18 @@ const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0,
 <div id='customNightContainer'>
 <div class='customNightHolder'>
     <div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
-	<input type='number' min='0' max='20'>
+	<input type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed")))'>
 </div>
-<div class='customNightHolder'></div>
-<div class='customNightHolder'></div>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
+	<input type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed")))'><div class='customNightHolder'>
 </div>
-<button class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
+	<input type='number' id='marionetteSpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("marionetteSpeed")))'>
+</div>
+</div>
+<button class='homeScreenButton' onclick='play()'>Play</button>
 `);
 
 function GameLoop() {
