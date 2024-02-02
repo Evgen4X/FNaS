@@ -188,6 +188,12 @@ function newGame() {
 	play();
 }
 
+function customNightPlay(){
+	switchScreens(CustomNightScreen, HomeScreen);
+	console.log(Marionette.speed)
+	play();
+}
+
 function play() {
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
@@ -216,6 +222,9 @@ function doorToggle() {
 	}, 333);
 	if (button.getAttribute("state") == "on") {
 		button.setAttribute("state", "off");
+		if(Chica.cache.jumpscare == false){
+			Chica.cache.jumpscare = true;
+		}
 		--Data.usage;
 		OfficeDoor.el.animate([{top: "30vh"}, {top: "-20vh"}], {duration: 333, fill: "forwards"});
 	} else {
@@ -248,6 +257,15 @@ function doorLight() {
 		--Data.usage;
 	} else {
 		rect.style.opacity = 0;
+		if(Chica.cache.jumpscare == -1){
+			Chica.cache.jumpscare = false;
+			setTimeout(() => {
+				Chica.cache.jumpscare = null;
+				window.clearInterval(interval);
+				Chica.pos = 0;
+				ChicaImage3.hide();
+			}, 2000 + Math.random() * 2000);
+		}
 		++Data.usage;
 	}
 }
@@ -346,6 +364,10 @@ function toggleCamera() {
 		if (MarionetteReadyToGetIn == false) {
 			MarionetteReadyToGetIn = true;
 		}
+		if(Chica.cache.jumpscare == false){
+			Chica.cache.jumpscare = true;
+		}
+		
 		button.setAttribute("state", "off");
 		CameraScreen.show();
 		CameraScreen.el.animate([{transform: "rotateX(0deg)"}, {transform: "rotateX(90deg)"}], {duration: 333, easing: "ease-in"});
@@ -459,7 +481,8 @@ const HomeScreenBG = new Element(
 	<p class='homeScreenText'>Fife<br>Nights<br>at<br>Szuj</p>
 	<button class='homeScreenButton' onclick='play()'>Play</button>
 	<button class='homeScreenButton' onclick='newGame()'>New game</button>
-	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen)'>Credits</button>
+    <button class='homeScreenButton' onclick='switchScreens(HomeScreen, CustomNightScreen);'>Custom night</button>
+	<button class='homeScreenButton' onclick='switchScreens(HomeScreen, CreditsScreen);'>Credits</button>
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
 <img src="" width="50vw" height: "100vh" />
@@ -735,7 +758,7 @@ const BonnyFrames = [
 			BonnyImage01.el.style.width = "0vw";
 		}
 		BonnyImage.show();
-		Bonny.cache.jumpscare = false;
+		Bonny.cache.jumpscare = -1;
 		let interval = setInterval(() => {
 			if (Bonny.cache.jumpscare == true) {
 				Bonny.jumpscare();
@@ -770,6 +793,49 @@ Bonny.setUpdateBlockFunction(() => {
 		default:
 			return true;
 	}
+});
+
+/* CHICA */
+
+const ChicaFrames = [
+	new Frame(91, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
+		if (ChicaImage3.el.style.display != 'none') {
+			ChicaImage3.hide();
+		}
+	}),
+	new Frame(91, 1, "url(files/images/ChicaPhase1.png)", "50vw", "40vh", "5vw", "5vh", null),
+	new Frame(91, 2, "url(files/images/ChicaPhase2.png)", "75vw", "6vh", "10vw", "10vh", () => {
+		if (ChicaImage1.el.style.display != 'none') {
+			ChicaImage1.hide();
+		}
+		ChicaImage2.show();
+	}),
+	new Frame(91, 3, "url(files/images/ChicaPhase3.png)", "50vw", "40vh", "10vw", "10vh", () => {
+		if (ChicaImage2.el.style.display != 'none') {
+			ChicaImage2.hide();
+		}
+		ChicaImage3.show();
+		Chica.cache.jumpscare = -1;
+		let interval = setInterval(() => {
+			if (Chica.cache.jumpscare == true) {
+				Chica.jumpscare();
+				window.clearInterval(interval);
+			}
+		}, 300);
+		
+	}),
+	new Frame(91, 4, null, "0vw", "0vh", "0vw", "0vh", () => {
+		if (ChicaImage3.el.style.display != 'none') {
+			ChicaImage3.hide();
+		}
+	}),
+];
+
+const Chica = new Animatronic(5, ChicaFrames, "url(files/images/ChicaJumpscare.png)", null, null, null);
+Chica.cache.jumpscare = null;
+Chica.setSpeed(100);
+Chica.setUpdateBlockFunction(() => {
+	return document.getElementById('doorDarkRect').style.opacity != '0' || CameraToggleButton.el.getAttribute('state') == 'on';
 });
 
 //JUMPSCARE SCREEN
@@ -822,6 +888,15 @@ const BonnyImage01 = new Element("div", {position: "absolute", top: "10vh", left
 const BonnyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
 BonnyImage.hide();
 
+/*ADDING CHICA IMAGE*/
+const ChicaImage1 = new Element("div", {display: 'block', position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2, 'background-image': 'url(files/images/ChicaPhase1.png)', 'background-size': '10vw 10vh'}, OfficeBG.el);
+const ChicaImage2 = new Element("div", {display: 'block', position: "absolute", top: "50vh", left: "50vw", width: "10vw", height: "10vh", "z-index": 2, 'background-image': 'url(files/images/ChicaPhase2.png)', 'background-size': '10vw 10vh'}, OfficeBG.el);
+const ChicaImage3 = new Element("div", {display: 'block', position: "absolute", top: "30vh", left: "40vw", width: "10vw", height: "30vh", "z-index": 2, 'background-image': 'url(files/images/ChicaPhase3.png)', 'background-size': '10vw 30vh'}, OfficeBG.el);
+ChicaImage1.hide();
+ChicaImage2.hide();
+ChicaImage3.hide();
+
+
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
 MarionetteOfficeImage.hide();
@@ -829,10 +904,10 @@ MarionetteOfficeImage.hide();
 const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
 OfficeWindowView.el.id = "officeWindowVeiw";
 
-const OfficeDoor = new Element("div", {"z-index": 1, width: "23vw", height: "47vh", position: "absolute", top: "-20vh", left: "42vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "23vw 45vh"}, OfficeBG.el, ``);
+const OfficeDoor = new Element("div", {"z-index": 4, width: "23vw", height: "47vh", position: "absolute", top: "-20vh", left: "42vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "23vw 45vh"}, OfficeBG.el, ``);
 OfficeDoor.el.id = "officeDoor";
 
-const OfficeWindow = new Element("div", {"z-index": 1, width: "11vw", height: "30vh", position: "absolute", top: "-7vh", left: "17vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el, ``);
+const OfficeWindow = new Element("div", {"z-index": 4, width: "11vw", height: "30vh", position: "absolute", top: "-7vh", left: "17vw", "background-image": "url(files/images/OfficeDoor.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el, ``);
 OfficeWindow.el.id = "officeWindow";
 
 const EnergyLevel = new Element("div", {"z-index": 4, width: "auto", height: "5vh", position: "absolute", top: "79vh", left: "5vw"}, ScreenParent, `Power left: 100%`);
@@ -870,6 +945,31 @@ FlowersToggleButton.hide();
 const OfficeFG = new Element("div", {"z-index": 4, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
 
 const GameScreen = new Screen(OfficeBG, OfficeFG);
+
+// CUSTOM NIGHT SCREEN
+const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0, height: "100vh", width: "100vw", "background-image": "url(files/images/cameraGlitch.jpg)"}, ScreenParent, `
+<div id='customNightContainer'>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
+		<input value="1" type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed").value))'>
+	</div>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
+		<input value="1" type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed").value))'>
+	</div>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
+		<input value="1" type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed").value))'>
+	</div>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
+		<input value="1" type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
+	</div>
+</div>
+<button class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+`);
+
+const CustomNightScreen = new Screen(CustomNightBG);
 
 function GameLoop() {
 	//Time control
@@ -920,6 +1020,33 @@ function GameLoop() {
 					for (let property in frame.getElement().el.style) {
 						parent.el.style[property] = frame.getElement().el.style[property];
 					}
+					parent.el.style["z-index"] = 1;
+				}
+			}
+		}
+	}
+
+	if (Chica.speed != 0) {
+		let frame = Chica.update();
+		if (Chica.moved > 0) {
+			console.log("C");
+			Chica.moved--;
+			if (frame && frame.image) {
+				let parent = null;
+				if (Chica.pos == 1) {
+					parent = ChicaImage1;
+				} else if (Bonny.pos == 2) {
+					parent = ChicaImage2;
+				} else if (Bonny.pos == 3) {
+					parent = ChicaImage3;
+				} else {
+					parent = null;
+				}
+				if (parent) {
+					for (let property in frame.getElement().el.style) {
+						parent.el.style[property] = frame.getElement().el.style[property];
+					}
+					parent.show();
 					parent.el.style["z-index"] = 1;
 				}
 			}
