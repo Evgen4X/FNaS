@@ -836,6 +836,8 @@ const OfficeBG = new Element(
 const BonnyImage03 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen03BG.el);
 const BonnyImage01 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen01BG.el);
 const BonnyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
+BonnyImage03.hide();
+BonnyImage01.hide();
 BonnyImage.hide();
 
 /*ADDING CHICA IMAGE*/
