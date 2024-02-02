@@ -90,3 +90,10 @@ html {
 	outline: none;
 	border: none;
 }
+
+#customNightContainer {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+}
