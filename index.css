@@ -97,3 +97,11 @@ html {
 	align-items: center;
 	flex-direction: row;
 }
+
+.customNightHolder {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+}
