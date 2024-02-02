@@ -875,7 +875,10 @@ const GameScreen = new Screen(OfficeBG, OfficeFG);
 // CUSTOM NIGHT SCREEN
 const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0, height: "100vh", width: "100vw", "background-image": "url(files/images/cameraGlitch.jpg)"}, ScreenParent, `
 <div id='customNightContainer'>
-<div class='customNightHolder'></div>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
+	<input type='number' min='0' max='20'>
+</div>
 <div class='customNightHolder'></div>
 <div class='customNightHolder'></div>
 </div>
