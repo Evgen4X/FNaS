@@ -885,7 +885,11 @@ const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0,
 </div>
 <div class='customNightHolder'>
     <div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
-	<input type='number' id='marionetteSpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("marionetteSpeed")))'>
+	<input type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed")))'>
+</div>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
+	<input type='number' id='ChicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed")))'>
 </div>
 </div>
 <button class='homeScreenButton' onclick='play()'>Play</button>
