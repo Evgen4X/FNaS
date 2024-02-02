@@ -257,6 +257,9 @@ function windowLight() {
 	if (rect.style.opacity == 0) {
 		rect.style.opacity = 1;
 		--Data.usage;
+		if (Bonny.cache.jumpscare == false) {
+			Bonny.cache.jumpscare = true;
+		}
 	} else {
 		rect.style.opacity = 0;
 		++Data.usage;
@@ -308,6 +311,9 @@ function toggleCamera() {
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Data.usage++;
+		if (Bonny.cache.jumpscare == false) {
+			Bonny.cache.jumpscare = true;
+		}
 		FlowersToggleButton.hide();
 		CameraScreen.show();
 		CameraScreen.el.animate([{transform: "rotateX(90deg)"}, {transform: "rotateX(0deg)"}], {duration: 333, easing: "ease-out"});
@@ -707,6 +713,65 @@ MarionetteChargeButton.el.onmouseup = () => {
 	Marionette.cache.held = false;
 };
 
+/* BONNY */
+
+const BonnyFrames = [
+	new Frame(91, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
+		if (BonnyImage.el.style["background-image"]) {
+			BonnyImage.el.style["background-image"] = null;
+			BonnyImage.el.style.width = "0vw";
+		}
+	}),
+	new Frame(91, 1, "url(files/images/BonnyPhase1.png)", "17.5vw", "25vh", "10vw", "10vh", null),
+	new Frame(91, 2, "url(files/images/BonnyPhase2.png)", "75vw", "6vh", "10vw", "10vh", () => {
+		if (BonnyImage03.el.style["background-image"]) {
+			BonnyImage03.el.style["background-image"] = null;
+			BonnyImage03.el.style.width = "0vw";
+		}
+	}),
+	new Frame(91, 3, "url(files/images/BonnyPhase3.png)", "16vw", "27vh", "10vw", "10vh", () => {
+		if (BonnyImage01.el.style["background-image"]) {
+			BonnyImage01.el.style["background-image"] = null;
+			BonnyImage01.el.style.width = "0vw";
+		}
+		BonnyImage.show();
+		Bonny.cache.jumpscare = false;
+		let interval = setInterval(() => {
+			if (Bonny.cache.jumpscare == true) {
+				Bonny.jumpscare();
+				window.clearInterval(interval);
+			}
+		}, 300);
+		setTimeout(() => {
+			Bonny.cache.jumpscare = null;
+			window.clearInterval(interval);
+			Bonny.pos = 0;
+			BonnyImage.hide();
+		}, 2000 + Math.random() * 2000);
+	}),
+	new Frame(91, 4, null, "0vw", "0vh", "0vw", "0vh", () => {
+		if (BonnyImage.el.style["background-image"]) {
+			BonnyImage.el.style["background-image"] = null;
+			BonnyImage.el.style.width = "0vw";
+		}
+	}),
+];
+
+const Bonny = new Animatronic(9, BonnyFrames, 4, "url(files/images/BonnyJumpscare.png)", null, null, null);
+Bonny.setSpeed(50);
+Bonny.setUpdateBlockFunction(() => {
+	switch (Bonny.pos) {
+		case 1:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 2 || Data.cameraId != 0;
+		case 2:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 0;
+		case 3:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "on";
+		default:
+			return true;
+	}
+});
+
 //JUMPSCARE SCREEN
 
 const JumpscareScreenBG = new Element("div", {position: "absolute", width: "100vw", height: "100vh", "z-index": 999, "background-repeat": "no-repeat", "background-position": "center", "background-size": "100vh 100vh"}, ScreenParent);
@@ -746,10 +811,16 @@ const OfficeBG = new Element(
 	<div class="gameControlButton" id="windowOpenButton" style="top: 40vh; left: 33vw;" state="off" onclick="windowToggle();"></div>
 	
 	<div id="doorBGRect" style="position: absolute; z-index: 1; background-image: url('files/images/OfficeDoorBG.jpg'); background-size: 23vw 47vh; opacity: 1; top: 30vh; left: 42vw; width: 23vw; height: 47vh;" onclick="doorLight()";></div>
-	<div class="gameDarkRect" id="doorDarkRect" style="opacity: 1; top: 30vh; left: 42vw; width: 23vw; height: 47vh;" onclick="doorLight()";></div>
-	<div class="gameDarkRect" id="windowDarkRect" style="opacity: 1; top: 23vh; left: 17vw; width: 11vw; height: 30vh;" onclick="windowLight()";></div>
+	<div class="gameDarkRect" id="doorDarkRect" style="z-index: 3; opacity: 1; top: 30vh; left: 42vw; width: 23vw; height: 47vh;" onclick="doorLight()";></div>
+	<div class="gameDarkRect" id="windowDarkRect" style="z-index: 3; opacity: 1; top: 23vh; left: 17vw; width: 11vw; height: 30vh;" onclick="windowLight()";></div>
 	`
 );
+
+/*ADDING BONNY IMAGE*/
+const BonnyImage03 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen03BG.el);
+const BonnyImage01 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen01BG.el);
+const BonnyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
+BonnyImage.hide();
 
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
@@ -785,7 +856,7 @@ CameraToggleButton.el.setAttribute("state", "off");
 CameraToggleButton.el.onmouseenter = toggleCamera;
 CameraToggleButton.hide();
 
-//FLOWERS
+/*FLOWERS*/
 
 const Flowers = new Element("div", {"z-index": 10, position: "absolute", top: "100vh", left: "10vw", height: "90vh", width: "80vw", "background-image": "url(files/images/Flowers.png)", "background-size": "80vw 90vh"}, OfficeBG.el);
 Flowers.hide();
@@ -796,9 +867,7 @@ FlowersToggleButton.el.setAttribute("state", "off");
 FlowersToggleButton.el.onmouseenter = toggleFlowers;
 FlowersToggleButton.hide();
 
-//
-
-const OfficeFG = new Element("div", {"z-index": 2, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
+const OfficeFG = new Element("div", {"z-index": 4, position: "absolute", top: 0, left: "17vw", height: "29vh", width: "48vw", "background-image": "url('files/images/OfficeFG.png')", "background-size": "48vw 29vh"}, ScreenParent);
 
 const GameScreen = new Screen(OfficeBG, OfficeFG);
 
@@ -833,22 +902,50 @@ function GameLoop() {
 
 	//Animatronics cotrol
 
-	Marionette.update();
-	if (Marionette.cache.held) {
-		Marionette.cache.charge += 8;
-		Marionette.cache.charge = Math.min(Marionette.cache.charge, 1000);
-	} else {
-		Marionette.cache.charge -= (Marionette.speed + 10) / 15;
-		Marionette.cache.charge = Math.max(Marionette.cache.charge, 0);
+	if (Bonny.speed != 0) {
+		let frame = Bonny.update();
+		if (Bonny.moved > 0) {
+			console.log("M");
+			Bonny.moved--;
+			if (frame && frame.image) {
+				let parent = null;
+				if (Bonny.pos == 1) {
+					parent = BonnyImage03;
+				} else if (Bonny.pos == 2) {
+					parent = BonnyImage01;
+				} else if (Bonny.pos == 3) {
+					parent = BonnyImage;
+				}
+				if (parent) {
+					for (let property in frame.getElement().el.style) {
+						parent.el.style[property] = frame.getElement().el.style[property];
+					}
+					parent.el.style["z-index"] = 1;
+				}
+			}
+		}
 	}
-	MarionetteChargeButtonSetSize(Marionette.cache.charge);
 
-	let frame = Foxy.update();
-	if (Foxy.moved > 0) {
-		Foxy.moved--;
-		if (frame && frame.image) {
-			for (let property in frame.getElement().el.style) {
-				FoxyImage.el.style[property] = frame.getElement().el.style[property];
+	if (Marionette.speed != 0) {
+		Marionette.update();
+		if (Marionette.cache.held) {
+			Marionette.cache.charge += 8;
+			Marionette.cache.charge = Math.min(Marionette.cache.charge, 1000);
+		} else {
+			Marionette.cache.charge -= (Marionette.speed + 10) / 15;
+			Marionette.cache.charge = Math.max(Marionette.cache.charge, 0);
+		}
+		MarionetteChargeButtonSetSize(Marionette.cache.charge);
+	}
+
+	if (Foxy.speed != 0) {
+		let frame = Foxy.update();
+		if (Foxy.moved > 0) {
+			Foxy.moved--;
+			if (frame && frame.image) {
+				for (let property in frame.getElement().el.style) {
+					FoxyImage.el.style[property] = frame.getElement().el.style[property];
+				}
 			}
 		}
 	}
