@@ -92,7 +92,8 @@ html {
 }
 
 #customNightContainer {
-    display: flex;
+	width: 100vw;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: row;
@@ -103,5 +104,10 @@ html {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+}
 
+.animatronicImage {
+	width: 20vw;
+	height: 60vh;
+	background-size: 20vw 60vh;
 }
