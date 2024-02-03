@@ -631,7 +631,7 @@ const FoxyFrames = [
 const Foxy = new Animatronic(666, FoxyFrames, 4, "url(files/images/FoxyJumpscare.png)", null, 0, 0);
 const FoxyImage = new Element("div", {}, CameraScreen04BG.el);
 Foxy.cache.lastTimeSeen = 0;
-Foxy.setSpeed(5);
+Foxy.setSpeed(0);
 Foxy.setBlockFunction(isDoorLocked);
 Foxy.setUpdateFunction(() => {
 	adjSpeedBuff(Foxy, 0.01 * (Foxy.speedBuff < 0 ? 12 : 1));
@@ -703,7 +703,7 @@ const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/Mar
 var MarionetteReadyToGetIn = null;
 const MarionetteImage = new Element("div", {}, CameraScreen05BG.el);
 Marionette.cache.charge = 1000;
-Marionette.setSpeed(5);
+Marionette.setSpeed(0);
 Marionette.setUpdateBlockFunction(() => {
 	return Marionette.cache.charge / 1000 > Math.random();
 });
@@ -804,7 +804,7 @@ const BonnyFrames = [
 ];
 
 const Bonny = new Animatronic(9, BonnyFrames, 4, "url(files/images/BonnyJumpscare.png)", null, null, null);
-Bonny.setSpeed(5);
+Bonny.setSpeed(0);
 Bonny.setUpdateBlockFunction(() => {
 	switch (Bonny.pos) {
 		case 1:
@@ -855,7 +855,7 @@ const ChicaFrames = [
 
 const Chica = new Animatronic(5, ChicaFrames, 4, "url(files/images/ChicaJumpscare.png)", null, null, null);
 Chica.cache.jumpscare = null;
-Chica.setSpeed(100);
+Chica.setSpeed(0);
 Chica.setUpdateBlockFunction(() => {
 	return document.getElementById("doorDarkRect").style.opacity != "0" || CameraToggleButton.el.getAttribute("state") == "on";
 });
