@@ -886,6 +886,8 @@ const OfficeBG = new Element(
 const BonnyImage03 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen03BG.el);
 const BonnyImage01 = new Element("div", {position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2}, CameraScreen01BG.el);
 const BonnyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "30vh", "z-index": 2}, OfficeBG.el);
+BonnyImage03.hide();
+BonnyImage01.hide();
 BonnyImage.hide();
 
 /*ADDING CHICA IMAGE*/
@@ -895,7 +897,6 @@ const ChicaImage3 = new Element("div", {display: 'block', position: "absolute", 
 ChicaImage1.hide();
 ChicaImage2.hide();
 ChicaImage3.hide();
-
 
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
@@ -948,25 +949,23 @@ const GameScreen = new Screen(OfficeBG, OfficeFG);
 
 // CUSTOM NIGHT SCREEN
 const CustomNightBG = new Element("div", {position: "absolute", top: 0, left: 0, height: "100vh", width: "100vw", "background-image": "url(files/images/cameraGlitch.jpg)"}, ScreenParent, `
-<div id='customNightContainer'>
-	<div class='customNightHolder'>
-		<div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
-		<input value="1" type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed").value))'>
-	</div>
-	<div class='customNightHolder'>
-		<div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
-		<input value="1" type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed").value))'>
-	</div>
-	<div class='customNightHolder'>
-		<div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
-		<input value="1" type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed").value))'>
-	</div>
-	<div class='customNightHolder'>
-		<div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
-		<input value="1" type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
-	</div>
+<div class='customNightHolder'>
+  <div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
+  <input type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed")))'>
 </div>
-<button class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
+  <input type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed")))'><div class='customNightHolder'>
+</div>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
+  <input type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed")))'>
+</div>
+<div class='customNightHolder'>
+    <div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
+  <input type='number' id='ChicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed")))'>
+</div>
+<button class='homeScreenButton' onclick='play()'>Play</button>
 `);
 
 const CustomNightScreen = new Screen(CustomNightBG);
