@@ -111,3 +111,21 @@ html {
 	height: 60vh;
 	background-size: 20vw 60vh;
 }
+
+.triangleUp {
+	width: 0;
+	height: 0;
+	border-top: 3vw solid transparent;
+	border-left: 3vw solid transparent;
+	border-right: 3vw solid transparent;
+	border-bottom: 3vw solid white;
+}
+
+.triangleDown {
+	width: 0;
+	height: 0;
+	border-top: 3vw solid white;
+	border-left: 3vw solid transparent;
+	border-right: 3vw solid transparent;
+	border-bottom: 3vw solid transparent;
+}

@@ -195,6 +195,18 @@ function customNightPlay() {
 	play(true);
 }
 
+function incSpeed(how, whom, where) {
+	let newSpeed = whom.speed + how;
+	if (newSpeed < 0) {
+		newSpeed = 21 + newSpeed;
+	}
+	if (newSpeed > 20) {
+		newSpeed -= 21;
+	}
+	whom.setSpeed(newSpeed);
+	where.innerHTML = newSpeed;
+}
+
 function play(customNight = false) {
 	if (customNight) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
@@ -1036,18 +1048,30 @@ const CustomNightBG = new Element(
 <div id='customNightContainer'>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
+		<div id='CNSpeedBonny' style='color: white; font-size: x-large;'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
 		<input value='0' type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
+		<div id='CNSpeedFoxy' style='color: white; font-size: x-large;'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
 		<input value='0' type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
+		<div id='CNSpeedMarionette' style='color: white; font-size: x-large;'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
 		<input value='0' type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, Chica, document.getElementById("CNSpeedChica"));'></div>
+		<div id='CNSpeedChica' style='color: white; font-size: x-large;'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, Chica, document.getElementById("CNSpeedChica"));'></div>
 		<input value='0' type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
 	</div>
 </div>
