@@ -1062,7 +1062,7 @@ function GameLoop() {
 		usageBars[usageBars.length - 1].remove();
 	}
 
-	Data.energy -= (usage == 1 ? 0.5 : usage) * 1.2; //*0.2
+	Data.energy -= (usage == 1 ? 0.5 : usage) * 0.2;
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
 	if (Data.energy <= 0) {
 		EnergyLevel.el.innerHTML = "No power left";
