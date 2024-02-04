@@ -208,6 +208,7 @@ function incSpeed(how, whom, where) {
 }
 
 function play(customNight = false) {
+	console.log(GF.speed);
 	if (customNight) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
@@ -355,6 +356,9 @@ function toggleCamera() {
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Data.usage++;
+		if (GF.cache.jumpscare == false) {
+			GF.cache.jumpscare = null;
+		}
 		if (Bonny.cache.jumpscare == false && document.getElementById("windowOpenButton").getAttribute("state") == "off") {
 			Bonny.cache.jumpscare = true;
 		}
@@ -930,6 +934,12 @@ Chica.setUpdateBlockFunction(() => {
 	return document.getElementById("doorDarkRect").style.opacity != "0" || CameraToggleButton.el.getAttribute("state") == "on";
 });
 
+/* GOLDEN FREDDY */
+
+const GF = new Animatronic(5, null, null, "url(files/images/GFJumpscare.png)", null, null, null);
+GF.setSpeed(0);
+GF.cache.canBeShown = true;
+
 //JUMPSCARE SCREEN
 
 const JumpscareScreenBG = new Element("div", {position: "absolute", width: "100vw", height: "100vh", "z-index": 999, "background-repeat": "no-repeat", "background-position": "center", "background-size": "100vh 100vh"}, ScreenParent);
@@ -993,6 +1003,10 @@ ChicaImage3.hide();
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
 MarionetteOfficeImage.hide();
+
+/*ADDING GOLDEN FREDDY IMAGE*/
+const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
+GFOfficeImage.hide();
 
 const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
 OfficeWindowView.el.id = "officeWindowVeiw";
@@ -1073,6 +1087,13 @@ const CustomNightBG = new Element(
 		<div id='CNSpeedChica' style='color: white; font-size: x-large;'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Chica, document.getElementById("CNSpeedChica"));'></div>
 		<input value='0' type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
+	</div>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/GFJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, GF, document.getElementById("CNSpeedGF"));'></div>
+		<div id='CNSpeedGF' style='color: white; font-size: x-large;'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, GF, document.getElementById("CNSpeedGF"));'></div>
+		<input value='0' type='number' id='gfSpeed' min='0' max='20' onchange='GF.setSpeed(parseInt(document.getElementById("gfSpeed").value))'>
 	</div>
 </div>
 <button style='display: block; text-align: center;' class='homeScreenButton' onclick='customNightPlay()'>Play</button>
@@ -1206,6 +1227,28 @@ function GameLoop() {
 				}
 			}
 		}
+	}
+
+	if (document.getElementById("cameraToggleButton").getAttribute("state") == "on" && Math.random() < GF.speed / 20000 && GF.cache.canBeShown == true) {
+		GFOfficeImage.show();
+		GF.cache.jumpscare = false;
+		console.log("YA");
+		GF.cache.canBeShown = false;
+		let interval = setInterval(() => {
+			if (document.getElementById("cameraToggleButton").getAttribute("state") == "off") {
+				console.log("Ufff");
+				window.clearInterval(interval);
+				interval = setInterval(() => {
+					if (GF.cache.jumpscare == null) {
+						window.clearInterval(interval);
+					}
+				}, 200); //TODO: test
+				setTimeout(() => {
+					window.clearInterval(interval);
+					GF.jumpscare();
+				}, 1000);
+			}
+		}, 200);
 	}
 
 	setTimeout(GameLoop, 25); //40 fps
