@@ -192,10 +192,15 @@ function newGame() {
 function customNightPlay() {
 	switchScreens(CustomNightScreen, HomeScreen);
 	console.log(Marionette.speed);
-	play();
+	play(true);
 }
 
-function play() {
+function play(customNight = false) {
+	if (customNight) {
+		document.getElementById("nightNumber").innerHTML = "Custom night";
+	} else {
+		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
+	}
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
 		switchScreens(GameLoadingScreen, GameScreen);
@@ -203,8 +208,12 @@ function play() {
 		CameraToggleButton.show();
 		FlowersToggleButton.show();
 		EnergyBar.show();
+		if (customNight) {
+			Night.el.innerHTML = "Custom night";
+		} else {
+			Night.el.innerHTML = `Night: ${GlobalCache.night}`;
+		}
 		EnergyLevel.show();
-		Night.el.innerHTML = `Night: ${GlobalCache.night}`;
 		Time.show();
 		Night.show();
 	}, 2000);
@@ -402,7 +411,32 @@ function switchCameras(idToClose, idToOpen) {
 	switchScreens(getCameraScreen(idToClose), getCameraScreen(idToOpen));
 }
 
-function showOverlay(color) {
+function turnOffAll() {
+	let button = document.getElementById("doorOpenButton");
+	if (button.getAttribute("state") == "on") {
+		doorToggle();
+	}
+	button = document.getElementById("windowOpenButton");
+	if (button.getAttribute("state") == "on") {
+		windowToggle();
+	}
+	button = document.getElementById("doorDarkRect");
+	if (button.style.opacity == 0) {
+		doorLight();
+	}
+	button = document.getElementById("windowDarkRect");
+	if (button.style.opacity == 0) {
+		windowLight();
+	}
+	button = document.getElementById("cameraToggleButton");
+	if (button.getAttribute("state") == "on") {
+		toggleCamera();
+	}
+	showOverlay("rgba(0, 0, 0, 0.5)", timeBeforeNoEnergyJumpscare + 950);
+	Data.usage--;
+}
+
+function showOverlay(color, time = 200) {
 	let bgColor = Overlay.el.style["background-color"];
 	Overlay.el.style["background-color"] = color;
 	Overlay.show();
@@ -410,7 +444,7 @@ function showOverlay(color) {
 	setTimeout(() => {
 		Overlay.el.style["background-color"] = bgColor;
 		Overlay.hide();
-	}, 200);
+	}, time);
 }
 
 function Victory() {
@@ -451,7 +485,6 @@ function Victory() {
 		EnergyLevel.hide();
 		Time.hide();
 		Night.hide();
-		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
 		switchScreens(GameScreen, VictoryScreen);
 		setTimeout(() => {
 			switchScreens(VictoryScreen, HomeScreen);
@@ -472,7 +505,6 @@ function Lose() {
 		EnergyLevel.hide();
 		Time.hide();
 		Night.hide();
-		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
 		JumpscareScreen.hide();
 		switchScreens(GameScreen, HomeScreen);
 		window.location.reload();
@@ -833,7 +865,7 @@ const ChicaFrames = [
 		}
 		ChicaImage2.show();
 	}),
-	new Frame(91, 3, "url(files/images/ChicaPhase3.png)", "50vw", "40vh", "10vw", "10vh", () => {
+	new Frame(91, 3, "url(files/images/ChicaPhase3.png)", "55vw", "40vh", "10vw", "10vh", () => {
 		if (ChicaImage2.el.style.display != "none") {
 			ChicaImage2.hide();
 		}
@@ -915,7 +947,7 @@ BonnyImage.hide();
 /*ADDING CHICA IMAGE*/
 const ChicaImage1 = new Element("div", {display: "block", position: "absolute", top: "10vh", left: "10vw", width: "10vw", height: "10vh", "z-index": 2, "background-image": "url(files/images/ChicaPhase1.png)", "background-size": "10vw 10vh"}, OfficeBG.el);
 const ChicaImage2 = new Element("div", {display: "block", position: "absolute", top: "50vh", left: "50vw", width: "10vw", height: "10vh", "z-index": 2, "background-image": "url(files/images/ChicaPhase2.png)", "background-size": "10vw 10vh"}, OfficeBG.el);
-const ChicaImage3 = new Element("div", {display: "block", position: "absolute", top: "30vh", left: "40vw", width: "10vw", height: "30vh", "z-index": 2, "background-image": "url(files/images/ChicaPhase3.png)", "background-size": "10vw 30vh"}, OfficeBG.el);
+const ChicaImage3 = new Element("div", {display: "block", position: "absolute", top: "30vh", left: "42vw", width: "10vw", height: "30vh", "z-index": 2, "background-image": "url(files/images/ChicaPhase3.png)", "background-size": "10vw 30vh"}, OfficeBG.el);
 ChicaImage1.hide();
 ChicaImage2.hide();
 ChicaImage3.hide();
@@ -1004,6 +1036,8 @@ const CustomNightScreen = new Screen(CustomNightBG);
 const Overlay = new Element("div", {position: "absolute", top: 0, left: 0, width: "100vw", height: "99vh", "z-index": 999}, ScreenParent);
 Overlay.hide();
 
+let turnedOffAll = false;
+let timeBeforeNoEnergyJumpscare = Math.random() * 10000 + 5000;
 function GameLoop() {
 	//Time control
 	Data.time += 1;
@@ -1028,8 +1062,18 @@ function GameLoop() {
 		usageBars[usageBars.length - 1].remove();
 	}
 
-	Data.energy -= (usage == 1 ? 0.5 : usage) * 0.2;
+	Data.energy -= (usage == 1 ? 0.5 : usage) * 1.2; //*0.2
 	EnergyLevel.el.innerHTML = "Power left: " + Math.floor(Data.energy / 50) + "%";
+	if (Data.energy <= 0) {
+		EnergyLevel.el.innerHTML = "No power left";
+		if (!turnedOffAll) {
+			turnOffAll();
+			turnedOffAll = true;
+			setTimeout(() => {
+				Bonny.jumpscare();
+			}, timeBeforeNoEnergyJumpscare);
+		}
+	}
 
 	MarionetteChargeButton.el.style.width = Math.round(Marionette.cache.charge) / 50 + "vw";
 
