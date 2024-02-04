@@ -432,8 +432,34 @@ function turnOffAll() {
 	if (button.getAttribute("state") == "on") {
 		toggleCamera();
 	}
-	showOverlay("rgba(0, 0, 0, 0.5)", timeBeforeNoEnergyJumpscare + 950);
+	showOverlay("rgba(0, 0, 0, 0.5)", timeBeforeNoEnergyJumpscare + 980);
 	Data.usage--;
+	setTimeout(() => {
+		BonnyEnergyJumpscare.show();
+		BonnyEnergyJumpscare.el.animate(
+			[
+				{opacity: 1},
+				{opacity: 1},
+				{opacity: 0},
+				{opacity: 0},
+				{opacity: 0},
+				{opacity: 1},
+				{opacity: 1},
+				{opacity: 1},
+				{opacity: 0},
+				{opacity: 0},
+				{opacity: 1},
+				{opacity: 1},
+				{opacity: 0},
+				{opacity: 0},
+				{opacity: 0},
+				{
+					opacity: 0,
+				},
+			],
+			{duration: timeBeforeNoEnergyJumpscare / 5, iterations: 5}
+		);
+	});
 }
 
 function showOverlay(color, time = 200) {
@@ -1036,6 +1062,9 @@ const CustomNightScreen = new Screen(CustomNightBG);
 const Overlay = new Element("div", {position: "absolute", top: 0, left: 0, width: "100vw", height: "99vh", "z-index": 999}, ScreenParent);
 Overlay.hide();
 
+const BonnyEnergyJumpscare = new Element("div", {position: "absolute", top: "30vh", left: "18vw", width: "8vw", height: "8vw", "z-index": 5, "background-image": "url(files/images/BonnyEnergyJumpscare.png", "background-size": "8vw 8vw"}, OfficeBG.el);
+BonnyEnergyJumpscare.hide();
+
 let turnedOffAll = false;
 let timeBeforeNoEnergyJumpscare = Math.random() * 10000 + 5000;
 function GameLoop() {
@@ -1070,6 +1099,7 @@ function GameLoop() {
 			turnOffAll();
 			turnedOffAll = true;
 			setTimeout(() => {
+				BonnyEnergyJumpscare.hide();
 				Bonny.jumpscare();
 			}, timeBeforeNoEnergyJumpscare);
 		}
