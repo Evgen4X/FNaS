@@ -1006,7 +1006,9 @@ MarionetteOfficeImage.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
+const GFImage01 = new Element('div', {position: "absolute", top: "40vh", left: "30ve", width: "20vw", height: "30vh", "background-image": "url(files/images/GFRight.png)", "background-size": "20vw 30ch"}, CameraScreen01BG.el);
 GFOfficeImage.hide();
+GFImage01.hide();
 
 const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
 OfficeWindowView.el.id = "officeWindowVeiw";
@@ -1229,33 +1231,37 @@ function GameLoop() {
 		}
 	}
 
-	if (document.getElementById("cameraToggleButton").getAttribute("state") == "on" && Math.random() < GF.speed / 20000 && GF.cache.canBeShown == true) {
-		GFOfficeImage.show();
-		GF.cache.jumpscare = false;
-		console.log("YA");
-		GF.cache.canBeShown = false;
-		let interval = setInterval(() => {
-			if (document.getElementById("cameraToggleButton").getAttribute("state") == "off") {
-				console.log("Ufff");
-				window.clearInterval(interval);
-				interval = setInterval(() => {
-					if (GF.cache.jumpscare == null) {
-						window.clearInterval(interval);
-						GFOfficeImage.hide();
-						GF.cache.canBeShown = true;
-						setTimeout(() => {
-							showOverlay("#000");
-						}, 400);
-					}
-				}, 200); //TODO: test
-				setTimeout(() => {
-					window.clearInterval(interval);
-					if(GF.cache.jumpscare != null){
-						GF.jumpscare();
-					}
-				}, 2000);
-			}
-		}, 200);
+	if(Math.random() < GF.speed / 20000 && GF.cache.canBeShown){
+	    if (document.getElementById("cameraToggleButton").getAttribute("state") == "on") {
+		    GFOfficeImage.show();
+		    GF.cache.jumpscare = false;
+		    console.log("YA");
+		    GF.cache.canBeShown = false;
+		    let interval = setInterval(() => {
+			    if (document.getElementById("cameraToggleButton").getAttribute("state") == "off") {
+		    		console.log("Ufff");
+		    		window.clearInterval(interval);
+		    		interval = setInterval(() => {
+		    			if (GF.cache.jumpscare == null) {
+		    				window.clearInterval(interval);
+		    				GFOfficeImage.hide();
+		    				GF.cache.canBeShown = true;
+		    				setTimeout(() => {
+		    					showOverlay("#000");
+		    				}, 400);
+		    			}
+		    		}, 200); //TODO: test
+	    			setTimeout(() => {
+		    			window.clearInterval(interval);
+		    			if(GF.cache.jumpscare != null){
+	    					GF.jumpscare();
+	    				}
+	    			}, 2000);
+			    }
+		    }, 200);
+		} else if(document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 0){
+		    //TODO: do.
+		}
 	}
 
 	setTimeout(GameLoop, 25); //40 fps
