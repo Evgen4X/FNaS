@@ -1241,12 +1241,19 @@ function GameLoop() {
 				interval = setInterval(() => {
 					if (GF.cache.jumpscare == null) {
 						window.clearInterval(interval);
+						GFOfficeImage.hide();
+						GF.cache.canBeShown = true;
+						setTimeout(() => {
+							showOverlay("#000");
+						}, 400);
 					}
 				}, 200); //TODO: test
 				setTimeout(() => {
 					window.clearInterval(interval);
-					GF.jumpscare();
-				}, 1000);
+					if(GF.cache.jumpscare != null){
+						GF.jumpscare();
+					}
+				}, 2000);
 			}
 		}, 200);
 	}
