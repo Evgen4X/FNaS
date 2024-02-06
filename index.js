@@ -981,6 +981,13 @@ Chica.setUpdateBlockFunction(() => {
 	return document.getElementById("doorDarkRect").style.opacity != "0" || CameraToggleButton.el.getAttribute("state") == "on";
 });
 
+/* FREDDY */
+
+const FreddyFrames = [
+];
+
+const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)", null, null, null);
+
 /* GOLDEN FREDDY */
 
 const GF = new Animatronic(5, null, null, "url(files/images/GFJumpscare.png)", null, null, null);
