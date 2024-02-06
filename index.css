@@ -6,7 +6,7 @@ html {
 }
 
 :root {
-	--fontSize: xx-large;
+	--fontSize: min(4.6vh, 2.3vw);
 }
 
 .transparent {

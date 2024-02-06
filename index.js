@@ -347,6 +347,35 @@ function getCameraScreen(id) {
 	}
 }
 
+function GFspawn(pos, img) {
+	img.show();
+	if (GF.cache.lastPos == pos) {
+		return;
+	}
+	GF.cache.lastPos = pos;
+	GF.cache.pos = pos;
+	GF.cache.jumpscare = false;
+	GF.cache.canBeShown = false;
+	console.log("Ufff");
+	let interval = setInterval(() => {
+		if (GF.cache.jumpscare == null) {
+			console.log("CLEARED");
+			window.clearInterval(interval);
+			img.hide();
+			GF.cache.canBeShown = true;
+			setTimeout(() => {
+				showOverlay("#000");
+			}, 100);
+		}
+	}, 200); //TODO: test
+	setTimeout(() => {
+		window.clearInterval(interval);
+		if (GF.cache.jumpscare != null) {
+			GF.jumpscare();
+		}
+	}, 2000 - 25 * GF.speed);
+}
+
 function toggleCamera() {
 	let button = document.getElementById("cameraToggleButton");
 	button.onmouseenter = "";
@@ -356,9 +385,13 @@ function toggleCamera() {
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Data.usage++;
-		if (GF.cache.jumpscare == false) {
+
+		if (GF.cache.jumpscare != null && Data.cameraId != GF.cache.pos) {
 			GF.cache.jumpscare = null;
+		} else if (Math.random() < GF.speed / 200 && GF.cache.canBeShown) {
+			GFspawn(Data.cameraId, [GFImage01, GFImage02, GFImage03, GFImage04, GFImage05][Data.cameraId]);
 		}
+
 		if (Bonny.cache.jumpscare == false && document.getElementById("windowOpenButton").getAttribute("state") == "off") {
 			Bonny.cache.jumpscare = true;
 		}
@@ -395,6 +428,13 @@ function toggleCamera() {
 	} else {
 		console.log(Foxy.speedBuff);
 		Data.usage--;
+
+		if (GF.cache.jumpscare != null && GF.cache.pos != 6) {
+			GF.cache.jumpscare = null;
+		} else if (Math.random() < GF.speed / 200 && GF.cache.canBeShown) {
+			GFspawn(-1, GFOfficeImage);
+		}
+
 		if (MarionetteReadyToGetIn == false) {
 			MarionetteReadyToGetIn = true;
 		}
@@ -407,7 +447,6 @@ function toggleCamera() {
 		CameraRecordingCircle.hide();
 		if (Data.cameraId == 3) {
 			Foxy.cache.lastTimeSeen = 0;
-			console.log("!");
 		}
 		setTimeout(() => {
 			CameraScreen.hide();
@@ -424,6 +463,12 @@ function switchCameras(idToClose, idToOpen) {
 		idToClose = Data.cameraId;
 	}
 	Data.cameraId = idToOpen;
+	if (GF.cache.jumpscare != null && idToOpen != GF.cache.pos) {
+		GF.cache.jumpscare = null;
+		console.log("NULLED");
+	} else if (Math.random() < GF.speed / 500 && GF.cache.canBeShown) {
+		GFspawn(Data.cameraId, [GFImage01, GFImage02, GFImage03, GFImage04, GFImage05][idToOpen]);
+	}
 	switchScreens(getCameraScreen(idToClose), getCameraScreen(idToOpen));
 }
 
@@ -1006,9 +1051,17 @@ MarionetteOfficeImage.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
-const GFImage01 = new Element('div', {position: "absolute", top: "40vh", left: "30ve", width: "20vw", height: "30vh", "background-image": "url(files/images/GFRight.png)", "background-size": "20vw 30ch"}, CameraScreen01BG.el);
+const GFImage01 = new Element("div", {position: "absolute", top: "30vh", left: "5vw", width: "20vw", height: "30vh", "background-image": "url(files/images/GFLeft.png)", "background-size": "20vw 30vh"}, CameraScreen01BG.el);
+const GFImage02 = new Element("div", {position: "absolute", top: "30vh", left: "70vw", width: "20vw", height: "40vh", "background-image": "url(files/images/GFRight.png)", "background-size": "20vw 40vh"}, CameraScreen02BG.el);
+const GFImage03 = new Element("div", {position: "absolute", top: "20vh", left: "0vw", width: "20vw", height: "40vh", "background-image": "url(files/images/GFStill.png)", "background-size": "20vw 40vh"}, CameraScreen03BG.el);
+const GFImage04 = new Element("div", {position: "absolute", top: "25vh", left: "40vw", width: "7vw", height: "20vh", "background-image": "url(files/images/GFStill.png)", "background-size": "7vw 20vh"}, CameraScreen04BG.el);
+const GFImage05 = new Element("div", {position: "absolute", top: "17vh", left: "50vw", width: "10vw", height: "30vh", "background-image": "url(files/images/GFStill.png)", "background-size": "10vw 30vh"}, CameraScreen05BG.el);
 GFOfficeImage.hide();
 GFImage01.hide();
+GFImage02.hide();
+GFImage03.hide();
+GFImage04.hide();
+GFImage05.hide();
 
 const OfficeWindowView = new Element("div", {"z-index": 0, position: "absolute", top: "23vh", left: "17vw", width: "11vw", height: "30vh", "background-image": "url(files/images/OfficeWindowView.jpg)", "background-size": "11vw 30vh"}, OfficeBG.el);
 OfficeWindowView.el.id = "officeWindowVeiw";
@@ -1065,35 +1118,35 @@ const CustomNightBG = new Element(
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
-		<div id='CNSpeedBonny' style='color: white; font-size: x-large;'>0</div>
+		<div id='CNSpeedBonny' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
 		<input value='0' type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
-		<div id='CNSpeedFoxy' style='color: white; font-size: x-large;'>0</div>
+		<div id='CNSpeedFoxy' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
 		<input value='0' type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
-		<div id='CNSpeedMarionette' style='color: white; font-size: x-large;'>0</div>
+		<div id='CNSpeedMarionette' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
 		<input value='0' type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Chica, document.getElementById("CNSpeedChica"));'></div>
-		<div id='CNSpeedChica' style='color: white; font-size: x-large;'>0</div>
+		<div id='CNSpeedChica' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Chica, document.getElementById("CNSpeedChica"));'></div>
 		<input value='0' type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/GFJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, GF, document.getElementById("CNSpeedGF"));'></div>
-		<div id='CNSpeedGF' style='color: white; font-size: x-large;'>0</div>
+		<div id='CNSpeedGF' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, GF, document.getElementById("CNSpeedGF"));'></div>
 		<input value='0' type='number' id='gfSpeed' min='0' max='20' onchange='GF.setSpeed(parseInt(document.getElementById("gfSpeed").value))'>
 	</div>
@@ -1228,39 +1281,6 @@ function GameLoop() {
 					FoxyImage.el.style[property] = frame.getElement().el.style[property];
 				}
 			}
-		}
-	}
-
-	if(Math.random() < GF.speed / 20000 && GF.cache.canBeShown){
-	    if (document.getElementById("cameraToggleButton").getAttribute("state") == "on") {
-		    GFOfficeImage.show();
-		    GF.cache.jumpscare = false;
-		    console.log("YA");
-		    GF.cache.canBeShown = false;
-		    let interval = setInterval(() => {
-			    if (document.getElementById("cameraToggleButton").getAttribute("state") == "off") {
-		    		console.log("Ufff");
-		    		window.clearInterval(interval);
-		    		interval = setInterval(() => {
-		    			if (GF.cache.jumpscare == null) {
-		    				window.clearInterval(interval);
-		    				GFOfficeImage.hide();
-		    				GF.cache.canBeShown = true;
-		    				setTimeout(() => {
-		    					showOverlay("#000");
-		    				}, 400);
-		    			}
-		    		}, 200); //TODO: test
-	    			setTimeout(() => {
-		    			window.clearInterval(interval);
-		    			if(GF.cache.jumpscare != null){
-	    					GF.jumpscare();
-	    				}
-	    			}, 2000);
-			    }
-		    }, 200);
-		} else if(document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 0){
-		    //TODO: do.
 		}
 	}
 
