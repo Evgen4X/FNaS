@@ -81,7 +81,7 @@ class Frame {
 }
 
 class Animatronic {
-	constructor(id, frames, end, jumpscareImg, alternativeFrames = null, divergenceAt = 0, convergenceAt = 0) {
+	constructor(id, frames, end, jumpscareImg) {
 		this.id = id;
 		this.frames = frames;
 		this.speed = 0;
@@ -91,11 +91,6 @@ class Animatronic {
 		this.speedBuff = 0;
 		this.cache = {};
 		this.jumpscareImg = jumpscareImg;
-		if (alternativeFrames != null) {
-			this.alternativeFrames = alternativeFrames;
-			this.divergenceAt = divergenceAt;
-			this.convergenceAt = convergenceAt;
-		}
 	}
 
 	setUpdateFunction(func) {
@@ -749,7 +744,7 @@ const FoxyFrames = [
 		}
 	}),
 ];
-const Foxy = new Animatronic(666, FoxyFrames, 4, "url(files/images/FoxyJumpscare.png)", null, 0, 0);
+const Foxy = new Animatronic(666, FoxyFrames, 4, "url(files/images/FoxyJumpscare.png)");
 const FoxyImage = new Element("div", {}, CameraScreen04BG.el);
 Foxy.cache.lastTimeSeen = 0;
 Foxy.setSpeed(0);
@@ -820,7 +815,7 @@ const MarionetteFrames = [
 	}),
 ];
 
-const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/MarionetteJumpscare.png)", null, null, null);
+const Marionette = new Animatronic(1, MarionetteFrames, 4, "url(files/images/MarionetteJumpscare.png)");
 var MarionetteReadyToGetIn = null;
 const MarionetteImage = new Element("div", {}, CameraScreen05BG.el);
 Marionette.cache.charge = 1000;
@@ -924,7 +919,7 @@ const BonnyFrames = [
 	}),
 ];
 
-const Bonny = new Animatronic(9, BonnyFrames, 4, "url(files/images/BonnyJumpscare.png)", null, null, null);
+const Bonny = new Animatronic(9, BonnyFrames, 4, "url(files/images/BonnyJumpscare.png)");
 Bonny.setSpeed(0);
 Bonny.setUpdateBlockFunction(() => {
 	switch (Bonny.pos) {
@@ -974,7 +969,7 @@ const ChicaFrames = [
 	}),
 ];
 
-const Chica = new Animatronic(5, ChicaFrames, 4, "url(files/images/ChicaJumpscare.png)", null, null, null);
+const Chica = new Animatronic(5, ChicaFrames, 4, "url(files/images/ChicaJumpscare.png)");
 Chica.cache.jumpscare = null;
 Chica.setSpeed(0);
 Chica.setUpdateBlockFunction(() => {
@@ -986,11 +981,11 @@ Chica.setUpdateBlockFunction(() => {
 const FreddyFrames = [
 ];
 
-const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)", null, null, null);
+const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)");
 
 /* GOLDEN FREDDY */
 
-const GF = new Animatronic(5, null, null, "url(files/images/GFJumpscare.png)", null, null, null);
+const GF = new Animatronic(5, null, null, "url(files/images/GFJumpscare.png)");
 GF.setSpeed(0);
 GF.cache.canBeShown = true;
 
@@ -1151,6 +1146,13 @@ const CustomNightBG = new Element(
 		<div id='CNSpeedChica' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Chica, document.getElementById("CNSpeedChica"));'></div>
 		<input value='0' type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
+	</div>
+	<div class='customNightHolder'>
+		<div class='animatronicImage' style='background-image: url(files/images/FreddyJumpscare.png);'></div>
+		<div class='triangleUp' onclick='incSpeed(1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
+		<div id='CNSpeedFreddy' style='color: white; font-size: min(4vh, 2vw);'>0</div>
+		<div class='triangleDown' onclick='incSpeed(-1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
+		<input value='0' type='number' id='freddySpeed' min='0' max='20' onchange='Ffreddy.setSpeed(parseInt(document.getElementById("freddySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/GFJumpscare.png);'></div>
