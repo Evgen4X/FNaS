@@ -117,7 +117,7 @@ class Animatronic {
 		if (this.updateFunc) {
 			this.updateFunc();
 		}
-		if (Math.random() < (this.speed + this.speedBuff) / 20000 && this.canUpdate()) {
+		if (Math.random() < (this.speed + this.speedBuff) / 15000 && this.canUpdate()) {
 			if (this.moveFunc) {
 				this.moveFunc();
 			}
