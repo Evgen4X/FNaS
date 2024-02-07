@@ -979,6 +979,11 @@ Chica.setUpdateBlockFunction(() => {
 /* FREDDY */
 
 const FreddyFrames = [
+	new Frame(70, 0, null, '0vw', '0vh', '0vw', '0vh', () => {
+		if (FreddyImage.el.style.display != "none") {
+			FreddyImage.hide();
+		}
+	})
 ];
 
 const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)");
@@ -1052,6 +1057,10 @@ ChicaImage3.hide();
 /*ADDING MARIONETTE IMAGE*/
 const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10vh", left: "40vw", width: "30vw", height: "70vh", "background-image": "url(files/images/MarionettePhase.png)", "background-size": "30vw 70vh", "z-index": 5}, OfficeBG.el);
 MarionetteOfficeImage.hide();
+
+/*ADDING FREDDY IMAGE*/
+const FreddyImage = new Element("div", {position: "absolute", top: "20vh", left: "80vw", height: "30vh", width: "20vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "20vw 30vh"}, CameraScreen01BG.el);
+FreddyImage.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
