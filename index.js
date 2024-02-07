@@ -203,7 +203,7 @@ function incSpeed(how, whom, where) {
 }
 
 function play(customNight = false) {
-	console.log(GF.speed);
+	console.log(Freddy.speed);
 	if (customNight) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
@@ -924,7 +924,7 @@ Bonny.setSpeed(0);
 Bonny.setUpdateBlockFunction(() => {
 	switch (Bonny.pos) {
 		case 1:
-			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 2 || Data.cameraId != 0;
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || (Data.cameraId != 2 && Data.cameraId != 0);
 		case 2:
 			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 0;
 		case 3:
@@ -983,10 +983,33 @@ const FreddyFrames = [
 		if (FreddyImage.el.style.display != "none") {
 			FreddyImage.hide();
 		}
+		console.log("A!");
+	}),
+
+	new Frame(71, 1, 'url(files/images/FreddyPos1.png)', '60vw', '5vh', '20vw', '30vh', () => {
+		FreddyImage01.show();
+		console.log("A#");
+	}),
+	new Frame(72, 2, 'url(files/images/FreddyPos2.png)', '10vw', '10vh', '20vw', '30vh', () => {
+		FreddyImage01.hide();
+		FreddyImage02.show();
 	})
 ];
 
-const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)");
+const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)", null, null, null);
+Freddy.setSpeed(0);
+Freddy.setUpdateBlockFunction(() => {
+	switch(Freddy.pos){
+		case 0:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 3;
+		case 1:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || (Data.cameraId != 3 && Data.cameraId != 1);
+		case 2:
+			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || (Data.cameraId != 1 && Data.cameraId != 0);
+		default:
+			return true;
+	}
+});
 
 /* GOLDEN FREDDY */
 
@@ -1060,7 +1083,11 @@ MarionetteOfficeImage.hide();
 
 /*ADDING FREDDY IMAGE*/
 const FreddyImage = new Element("div", {position: "absolute", top: "20vh", left: "80vw", height: "30vh", width: "20vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "20vw 30vh"}, CameraScreen01BG.el);
+const FreddyImage01 = new Element("div", {position: "absolute", top: "5vh", left: "60vw", height: "30vh", width: "20vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "20vw 30vh"}, CameraScreen04BG.el);
+const FreddyImage02 = new Element("div", {position: "absolute", top: "10vh", left: "40vw", height: "40vh", width: "20vw", "background-image": "url(files/images/FreddyPos2.png)", "background-size": "20vw 40vh"}, CameraScreen02BG.el);
 FreddyImage.hide();
+FreddyImage01.hide();
+FreddyImage02.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
@@ -1161,7 +1188,7 @@ const CustomNightBG = new Element(
 		<div class='triangleUp' onclick='incSpeed(1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
 		<div id='CNSpeedFreddy' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
-		<input value='0' type='number' id='freddySpeed' min='0' max='20' onchange='Ffreddy.setSpeed(parseInt(document.getElementById("freddySpeed").value))'>
+		<input value='0' type='number' id='freddySpeed' min='0' max='20' onchange='Freddy.setSpeed(parseInt(document.getElementById("freddySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/GFJumpscare.png);'></div>
@@ -1299,6 +1326,33 @@ function GameLoop() {
 			if (frame && frame.image) {
 				for (let property in frame.getElement().el.style) {
 					FoxyImage.el.style[property] = frame.getElement().el.style[property];
+				}
+			}
+		}
+	}
+
+	if (Freddy.speed != 0){
+		let frame = Freddy.update();
+		if (Freddy.moved > 0) {
+			console.log("C");
+			Freddy.moved--;
+			if (frame && frame.image) {
+				let parent = null;
+				if (Freddy.pos == 1) {
+					parent = FreddyImage01;
+				} else if (Freddy.pos == 2) {
+					parent = FreddyImage02;
+				} else if (Bonny.pos == 3) {
+					parent = FreddyImage;
+				} else {
+					parent = null;
+				}
+				if (parent) {
+					for (let property in frame.getElement().el.style) {
+						parent.el.style[property] = frame.getElement().el.style[property];
+					}
+					parent.show();
+					parent.el.style["z-index"] = 1;
 				}
 			}
 		}
