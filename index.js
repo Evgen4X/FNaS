@@ -634,6 +634,30 @@ const HomeScreenBG = new Element(
 <div class='imagePreload' style='background-image: url(files/images/cameraScreen03.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/cameraScreen04.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/cameraScreen05.jpg);'></div>
+<div class='imagePreload' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraMap.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FreddyJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/GFJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/OfficeBG.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/MarionettePhase.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/GFStill.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/GFRight.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/GFLeft.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FreddyPos3.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FreddyPos2.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FreddyPos1.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/FoxyPhase2.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/ChicaPhase3.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/ChicaPhase2.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/ChicaPhase1.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/Flowers.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraToggleButton.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/BonnyPhase3.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/BonnyPhase2.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/BonnyPhase1.png);'></div>
 `
 );
 
