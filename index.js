@@ -259,6 +259,9 @@ function windowToggle() {
 	}, 333);
 	if (button.getAttribute("state") == "on") {
 		button.setAttribute("state", "off");
+		if (Freddy.cache.jumpscare == false) {
+			Freddy.cache.jumpscare = true;
+		}
 		if (Bonny.cache.jumpscare == false) {
 			Bonny.cache.jumpscare = true;
 		}
@@ -298,6 +301,9 @@ function doorLight() {
 function windowLight() {
 	let rect = document.getElementById("windowDarkRect");
 	if (rect.style.opacity == 0) {
+		if (Freddy.cache.jumpscare == -1) {
+			Freddy.cache.jumpscare = false;
+		}
 		rect.style.opacity = 1;
 		--Data.usage;
 	} else {
@@ -381,6 +387,9 @@ function toggleCamera() {
 		button.setAttribute("state", "on");
 		Data.usage++;
 
+		if (Freddy.cache.jumpscare == -1) {
+			Freddy.cache.jumpscare = false;
+		}
 		if (GF.cache.jumpscare != null && Data.cameraId != GF.cache.pos) {
 			GF.cache.jumpscare = null;
 		} else if (Math.random() < GF.speed / 200 && GF.cache.canBeShown) {
@@ -458,6 +467,9 @@ function switchCameras(idToClose, idToOpen) {
 		idToClose = Data.cameraId;
 	}
 	Data.cameraId = idToOpen;
+	if (Freddy.cache.jumpscare == -1) {
+		Freddy.cache.jumpscare = false;
+	}
 	if (GF.cache.jumpscare != null && idToOpen != GF.cache.pos) {
 		GF.cache.jumpscare = null;
 		console.log("NULLED");
@@ -617,6 +629,11 @@ const HomeScreenBG = new Element(
 	<button class='homeScreenButton' onclick='window.close();'>Exit</button>
 </div>
 <img src="" width="50vw" height: "100vh" />
+<div class='imagePreload' style='background-image: url(files/images/cameraScreen01.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraScreen02.jpg);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraScreen03.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraScreen04.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/cameraScreen05.jpg);'></div>
 `
 );
 
@@ -750,7 +767,7 @@ Foxy.cache.lastTimeSeen = 0;
 Foxy.setSpeed(0);
 Foxy.setBlockFunction(isDoorLocked);
 Foxy.setUpdateFunction(() => {
-	adjSpeedBuff(Foxy, 0.01 * (Foxy.speedBuff < 0 ? 12 : 1));
+	adjSpeedBuff(Foxy, Foxy.speedBuff < 0 ? 0.12 : 0.001);
 	Foxy.cache.lastTimeSeen += 25;
 });
 Foxy.setMoveFunction(() => {
@@ -807,7 +824,7 @@ const MarionetteFrames = [
 						button.style["background-color"] = "#555";
 						Marionette.cache.charge = 1000;
 						MarionetteReadyToGetIn = null;
-					}, Math.random() * 2000 + 3000);
+					}, Math.random() * 5000 + 3000);
 				}, 1000 - Marionette.speed * 10);
 				window.clearInterval(interval);
 			}
@@ -979,33 +996,63 @@ Chica.setUpdateBlockFunction(() => {
 /* FREDDY */
 
 const FreddyFrames = [
-	new Frame(70, 0, null, '0vw', '0vh', '0vw', '0vh', () => {
-		if (FreddyImage.el.style.display != "none") {
-			FreddyImage.hide();
-		}
+	new Frame(70, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
+		FreddyImage.hide();
 		console.log("A!");
 	}),
 
-	new Frame(71, 1, 'url(files/images/FreddyPos1.png)', '60vw', '5vh', '20vw', '30vh', () => {
+	new Frame(71, 1, "url(files/images/FreddyPos1.png)", "60vw", "20vh", "10vw", "20vh", () => {
 		FreddyImage01.show();
 		console.log("A#");
 	}),
-	new Frame(72, 2, 'url(files/images/FreddyPos2.png)', '10vw', '10vh', '20vw', '30vh', () => {
+	new Frame(72, 2, "url(files/images/FreddyPos2.png)", "20vw", "10vh", "10vw", "30vh", () => {
 		FreddyImage01.hide();
 		FreddyImage02.show();
-	})
+		console.log("A'");
+	}),
+	new Frame(73, 3, "url(files/images/FreddyPos2.png)", "85vw", "20vh", "10vw", "30vh", () => {
+		console.log("A*");
+		FreddyImage02.hide();
+		FreddyImage03.show();
+	}),
+	new Frame(74, 4, null, "0vw", "0vh", "0vw", "0vh", () => {
+		FreddyImage03.hide();
+		FreddyImage.show();
+		Freddy.cache.jumpscare = -1;
+		let done = false;
+		let interval = setInterval(() => {
+			if (!done && Freddy.cache.jumpscare == false) {
+				setTimeout(() => {
+					FreddyImage.hide();
+					Freddy.pos = 0;
+					if (document.getElementById("windowOpenButton").getAttribute("state") == "off") {
+						Freddy.jumpscare();
+					}
+					window.clearInterval(interval);
+					showOverlay("#000");
+				}, Math.random() * 1000 + 2000 - 5 * Freddy.speed);
+				done = true;
+			}
+			if (Freddy.cache.jumpscare == true) {
+				Freddy.jumpscare();
+				window.clearInterval(interval);
+			}
+		}, 300);
+	}),
 ];
 
 const Freddy = new Animatronic(7, FreddyFrames, 4, "url(files/images/FreddyJumpscare.png)", null, null, null);
 Freddy.setSpeed(0);
 Freddy.setUpdateBlockFunction(() => {
-	switch(Freddy.pos){
+	switch (Freddy.pos) {
 		case 0:
 			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || Data.cameraId != 3;
 		case 1:
 			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || (Data.cameraId != 3 && Data.cameraId != 1);
 		case 2:
 			return document.getElementById("cameraToggleButton").getAttribute("state") == "off" || (Data.cameraId != 1 && Data.cameraId != 0);
+		case 3:
+			return (document.getElementById("cameraToggleButton").getAttribute("state") == "off" && document.getElementById("doorDarkRect").style.opacity == 1) || Data.cameraId != 0;
 		default:
 			return true;
 	}
@@ -1082,12 +1129,14 @@ const MarionetteOfficeImage = new Element("div", {position: "absolute", top: "10
 MarionetteOfficeImage.hide();
 
 /*ADDING FREDDY IMAGE*/
-const FreddyImage = new Element("div", {position: "absolute", top: "20vh", left: "80vw", height: "30vh", width: "20vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "20vw 30vh"}, CameraScreen01BG.el);
-const FreddyImage01 = new Element("div", {position: "absolute", top: "5vh", left: "60vw", height: "30vh", width: "20vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "20vw 30vh"}, CameraScreen04BG.el);
-const FreddyImage02 = new Element("div", {position: "absolute", top: "10vh", left: "40vw", height: "40vh", width: "20vw", "background-image": "url(files/images/FreddyPos2.png)", "background-size": "20vw 40vh"}, CameraScreen02BG.el);
-FreddyImage.hide();
+const FreddyImage01 = new Element("div", {position: "absolute", top: "20vh", left: "60vw", height: "20vh", width: "10vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "10vw 20vh"}, CameraScreen04BG.el);
+const FreddyImage02 = new Element("div", {position: "absolute", top: "20vh", left: "40vw", height: "30vh", width: "10vw", "background-image": "url(files/images/FreddyPos2.png)", "background-size": "10vw 30vh"}, CameraScreen02BG.el);
+const FreddyImage03 = new Element("div", {position: "absolute", top: "20vh", left: "85vw", height: "30vh", width: "10vw", "background-image": "url(files/images/FreddyPos1.png)", "background-size": "10vw 30vh"}, CameraScreen01BG.el);
+const FreddyImage = new Element("div", {position: "absolute", top: "34vh", left: "17vw", width: "11vw", height: "10vh", "z-index": 2, "background-image": "url(files/images/FreddyPos3.png)", "background-size": "11vw 10vh"}, OfficeBG.el);
 FreddyImage01.hide();
 FreddyImage02.hide();
+FreddyImage03.hide();
+FreddyImage.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
@@ -1198,7 +1247,10 @@ const CustomNightBG = new Element(
 		<input value='0' type='number' id='gfSpeed' min='0' max='20' onchange='GF.setSpeed(parseInt(document.getElementById("gfSpeed").value))'>
 	</div>
 </div>
-<button style='display: block; text-align: center;' class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+<div style='display: flex; justify-content: space-around; align-items: space-around'>
+	<button style='display: block; text-align: center;' class='homeScreenButton' onclick='customNightPlay()'>Play</button>
+	<button style='display: block; text-align: center;' class='homeScreenButton' onclick='switchScreens(CustomNightScreen, HomeScreen);'>Back</button>
+</div>
 `
 );
 
@@ -1213,7 +1265,7 @@ const BonnyEnergyJumpscare = new Element("div", {position: "absolute", top: "30v
 BonnyEnergyJumpscare.hide();
 
 let turnedOffAll = false;
-let timeBeforeNoEnergyJumpscare = Math.random() * 10000 + 5000;
+let timeBeforeNoEnergyJumpscare = Math.random() * 15000 + 5000;
 function GameLoop() {
 	//Time control
 	Data.time += 1;
@@ -1331,7 +1383,7 @@ function GameLoop() {
 		}
 	}
 
-	if (Freddy.speed != 0){
+	if (Freddy.speed != 0) {
 		let frame = Freddy.update();
 		if (Freddy.moved > 0) {
 			console.log("C");

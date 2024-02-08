@@ -45,6 +45,11 @@ html {
 	margin: 0;
 }
 
+.imagePreload {
+	width: 0.1px;
+	height: 0.1px;
+}
+
 .homeScreenButton:hover::before {
 	content: ">>";
 	background-color: transparent;
