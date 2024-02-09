@@ -207,6 +207,27 @@ function play(customNight = false) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
 		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
+		for(let name in Speeds[GlobalCache.night - 1]){
+		    switch(name){
+				case "Freddy":
+					Freddy.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+				case "Chica":
+					Chica.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+				case "Bonny":
+					Bonny.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+				case "Foxy":
+					Foxy.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+				case "Marionette":
+					Marionette.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+				case "GF":
+					GF.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					break;
+		}
 	}
 	switchScreens(HomeScreen, GameLoadingScreen);
 	setTimeout(() => {
@@ -609,12 +630,12 @@ function Lose() {
 }
 
 const speeds = [
-	{Freddy: 0, Bonny: 0, Chica: 0, Foxy: 0, Marionette: 0, GF: 0},
-	{Freddy: 0, Bonny: 3, Chica: 1, Foxy: 1, Marionette: 1, GF: 0},
-	{Freddy: 1, Bonnie: 0, Chica: 5, Foxy: 2, Marionette: 4, GF: 2},
-	{Freddy: Math.floor(Math.random() * 2) + 1, Bonnie: 2, Chica: 4, Foxy: 6, Marionette: 7, GF: 4},
-	{Freddy: 3, Bonnie: 5, Chica: 7, Foxy: 5, Marionette: 10, GF: 7},
-	{Freddy: 4, Bonnie: 10, Chica: 12, Foxy: 16, Marionette: 20, GF: 10},
+	{"Freddy": 0, "Bonny": 0, "Chica": 0, "Foxy": 0, "Marionette": 0, "GF": 0},
+	{"Freddy": 0, "Bonny": 3, "Chica": 1, "Foxy": 1, "Marionette": 1, "GF": 0},
+	{"Freddy": 1, "Bonny": 0, "Chica": 5, "Foxy": 2, "Marionette": 4, "GF": 2},
+	{"Freddy": Math.floor(Math.random() * 2) + 1, "Bonnie": 2, "Chica": 4, "Foxy": 6, "Marionette": 7, "GF": 4},
+	{"Freddy": 3, "Bonny": 5, "Chica": 7, "Foxy": 5, "Marionette": 10, "GF": 7},
+	{"Freddy": 4, "Bonny": 10, "Chica": 12, "Foxy": 16, "Marionette": 20, "GF": 10},
 ];
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
