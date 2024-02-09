@@ -167,11 +167,13 @@ class Animatronic {
 		if (button.getAttribute("state") == "on") {
 			toggleFlowers();
 		}
+		let jumpscareAudio = new Audio("files/sounds/Jumpscare.mp3");
+		jumpscareAudio.play();
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
-		JumpscareScreenBG.el.animate([{transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(3vw, -3vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-3vw, 3vw)"}], {duration: 1000});
+		JumpscareScreenBG.el.animate([{transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(3vw, -3vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-3vw, 3vw)"}], {duration: 2000});
 		JumpscareScreen.show();
 		console.log(this.jumpscareImg);
-		setTimeout(Lose, 1000);
+		setTimeout(Lose, 2000);
 	}
 }
 
@@ -252,6 +254,8 @@ function doorToggle() {
 	setTimeout(() => {
 		button.onclick = doorToggle;
 	}, 333);
+	let DoorAudio = new Audio("files/sounds/Door.mp3");
+	DoorAudio.play();
 	if (button.getAttribute("state") == "on") {
 		button.setAttribute("state", "off");
 		if (Chica.cache.jumpscare == false) {
@@ -271,6 +275,8 @@ function windowToggle() {
 	setTimeout(() => {
 		button.onclick = windowToggle;
 	}, 333);
+	let DoorAudio = new Audio("files/sounds/Door.mp3");
+	DoorAudio.play();
 	if (button.getAttribute("state") == "on") {
 		button.setAttribute("state", "off");
 		if (Freddy.cache.jumpscare == false) {
@@ -290,10 +296,12 @@ function windowToggle() {
 
 function doorLight() {
 	let rect = document.getElementById("doorDarkRect");
+	let LightAudio = new Audio("files/sounds/Light.mp3");
 	if (rect.style.opacity == 0) {
 		rect.style.opacity = 1;
 		--Data.usage;
 	} else {
+		LightAudio.play();
 		rect.style.opacity = 0;
 		if (Chica.cache.jumpscare == -1) {
 			Chica.cache.jumpscare = false;
@@ -314,6 +322,7 @@ function doorLight() {
 
 function windowLight() {
 	let rect = document.getElementById("windowDarkRect");
+	let LightAudio = new Audio("files/sounds/Light.mp3");
 	if (Freddy.cache.jumpscare == -1) {
 		Freddy.cache.jumpscare = false;
 	}
@@ -321,6 +330,7 @@ function windowLight() {
 		rect.style.opacity = 1;
 		--Data.usage;
 	} else {
+		LightAudio.play();
 		rect.style.opacity = 0;
 		++Data.usage;
 	}
@@ -397,6 +407,8 @@ function toggleCamera() {
 	setTimeout(() => {
 		button.onmouseenter = toggleCamera;
 	}, 334);
+	let CameraAudio = new Audio("files/sounds/Camera.mp3");
+	CameraAudio.play();
 	if (button.getAttribute("state") == "off") {
 		button.setAttribute("state", "on");
 		Data.usage++;
@@ -494,6 +506,8 @@ function switchCameras(idToClose, idToOpen) {
 	} else if (Math.random() < GF.speed / 500 && GF.cache.canBeShown) {
 		GFspawn(Data.cameraId, [GFImage01, GFImage02, GFImage03, GFImage04, GFImage05][idToOpen]);
 	}
+	let CameraAudio = new Audio("files/sounds/Camera.mp3");
+	CameraAudio.play();
 	switchScreens(getCameraScreen(idToClose), getCameraScreen(idToOpen));
 }
 
@@ -560,7 +574,9 @@ function showOverlay(color, time = 200) {
 }
 
 function Victory() {
-	GlobalCache.night++;
+	if(GlobalCache.night < 6){
+		GlobalCache.night++;
+	}
 	localStorage.setItem("FNaS_night", GlobalCache.night);
 	localStorage.setItem("FNaS_stars", GlobalCache.stars);
 	let button = document.getElementById("doorOpenButton");
@@ -600,6 +616,7 @@ function Victory() {
 		switchScreens(GameScreen, VictoryScreen);
 		setTimeout(() => {
 			switchScreens(VictoryScreen, HomeScreen);
+			window.location.reload();
 		}, 2000);
 	}, 337);
 }
@@ -1080,11 +1097,9 @@ const FreddyFrames = [
 				setTimeout(() => {
 					FreddyImage.hide();
 					Freddy.pos = 0;
-					if (document.getElementById("windowOpenButton").getAttribute("state") == "off") {
+					if (Freddy.cache.jumpscare == false && document.getElementById("windowOpenButton").getAttribute("state") == "off") {
 						Freddy.jumpscare();
-					}
-					window.clearInterval(interval);
-					if (Math.random() < 0.2) {
+					} else if (Math.random() < 0.75) {
 						Steam.show();
 						Steam.el.animate(
 							[
@@ -1099,6 +1114,7 @@ const FreddyFrames = [
 							Steam.hide();
 						}, 2000);
 					}
+					window.clearInterval(interval);
 					showOverlay("#000");
 				}, Math.random() * 1000 + 2000 - 5 * Freddy.speed);
 				done = true;
@@ -1250,7 +1266,7 @@ const usageColors = [
 	[128, 0, 0],
 ];
 
-const CameraToggleButton = new Element("div", {"z-index": 4, width: "40vw", height: "10vh", position: "absolute", top: "85vh", left: "30vw", "background-image": "url(files/images/cameraToggleButton.png)", "background-size": "40vw 10vh", filter: "invert(100%)"}, ScreenParent);
+const CameraToggleButton = new Element("div", {"z-index": 4, width: "35vw", height: "10vh", position: "absolute", top: "85vh", left: "30vw", "background-image": "url(files/images/cameraToggleButton.png)", "background-size": "35vw 10vh", filter: "invert(100%)"}, ScreenParent);
 CameraToggleButton.el.id = "cameraToggleButton";
 CameraToggleButton.el.setAttribute("state", "off");
 CameraToggleButton.el.onmouseenter = toggleCamera;
@@ -1353,11 +1369,13 @@ function GameLoop() {
 	if (Bonny.cache.incremented == 0 && time == 2) {
 		++Bonny.cache.incremented;
 		console.log("DONE");
+		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 	}
 	if (Bonny.cache.incremented == 1 && time == 3) {
 		++Bonny.cache.incremented;
 		console.log("DONE");
+		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 		Chica.setSpeed(Chica.speed + 1);
 		Foxy.setSpeed(Foxy.speed + 1);
@@ -1365,6 +1383,7 @@ function GameLoop() {
 	if (Bonny.cache.incremented == 2 && time == 4) {
 		++Bonny.cache.incremented;
 		console.log("DONE");
+		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 		Chica.setSpeed(Chica.speed + 1);
 		Foxy.setSpeed(Foxy.speed + 1);
