@@ -227,6 +227,7 @@ function play(customNight = false) {
 				case "GF":
 					GF.setSpeed(Speeds[GlobalCache.night - 1][name]);
 					break;
+			}
 		}
 	}
 	switchScreens(HomeScreen, GameLoadingScreen);
@@ -633,7 +634,7 @@ const speeds = [
 	{"Freddy": 0, "Bonny": 0, "Chica": 0, "Foxy": 0, "Marionette": 0, "GF": 0},
 	{"Freddy": 0, "Bonny": 3, "Chica": 1, "Foxy": 1, "Marionette": 1, "GF": 0},
 	{"Freddy": 1, "Bonny": 0, "Chica": 5, "Foxy": 2, "Marionette": 4, "GF": 2},
-	{"Freddy": Math.floor(Math.random() * 2) + 1, "Bonnie": 2, "Chica": 4, "Foxy": 6, "Marionette": 7, "GF": 4},
+	{"Freddy": Math.floor(Math.random() * 2) + 1, "Bonny": 2, "Chica": 4, "Foxy": 6, "Marionette": 7, "GF": 4},
 	{"Freddy": 3, "Bonny": 5, "Chica": 7, "Foxy": 5, "Marionette": 10, "GF": 7},
 	{"Freddy": 4, "Bonny": 10, "Chica": 12, "Foxy": 16, "Marionette": 20, "GF": 10},
 ];
