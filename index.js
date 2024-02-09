@@ -203,7 +203,6 @@ function incSpeed(how, whom, where) {
 }
 
 function play(customNight = false) {
-	console.log(Freddy.speed);
 	if (customNight) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
@@ -470,6 +469,10 @@ function switchCameras(idToClose, idToOpen) {
 	if (Freddy.cache.jumpscare == -1) {
 		Freddy.cache.jumpscare = false;
 	}
+	if (idToOpen == 3) {
+		adjSpeedBuff(Foxy, -Math.sqrt(Foxy.cache.lastTimeSeen) / 40);
+		console.log("Cache", -Math.sqrt(Foxy.cache.lastTimeSeen) / 40, " -> ", Foxy.speedBuff);
+	}
 	if (GF.cache.jumpscare != null && idToOpen != GF.cache.pos) {
 		GF.cache.jumpscare = null;
 		console.log("NULLED");
@@ -604,6 +607,15 @@ function Lose() {
 		window.location.reload();
 	}, 337);
 }
+
+const speeds = [
+	{Freddy: 0, Bonny: 0, Chica: 0, Foxy: 0, Marionette: 0, GF: 0},
+	{Freddy: 0, Bonny: 3, Chica: 1, Foxy: 1, Marionette: 1, GF: 0},
+	{Freddy: 1, Bonnie: 0, Chica: 5, Foxy: 2, Marionette: 4, GF: 2},
+	{Freddy: Math.floor(Math.random() * 2) + 1, Bonnie: 2, Chica: 4, Foxy: 6, Marionette: 7, GF: 4},
+	{Freddy: 3, Bonnie: 5, Chica: 7, Foxy: 5, Marionette: 10, GF: 7},
+	{Freddy: 4, Bonnie: 10, Chica: 12, Foxy: 16, Marionette: 20, GF: 10},
+];
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
 
@@ -977,6 +989,7 @@ Bonny.setUpdateBlockFunction(() => {
 			return true;
 	}
 });
+Bonny.cache.incremented = 0;
 
 /* CHICA */
 
@@ -1321,6 +1334,26 @@ function GameLoop() {
 	if (time >= 6 && time != 12) {
 		Victory();
 		return;
+	}
+	if (Bonny.cache.incremented == 0 && time == 2) {
+		++Bonny.cache.incremented;
+		console.log("DONE");
+		Bonny.setSpeed(Bonny.speed + 1);
+	}
+	if (Bonny.cache.incremented == 1 && time == 3) {
+		++Bonny.cache.incremented;
+		console.log("DONE");
+		Bonny.setSpeed(Bonny.speed + 1);
+		Chica.setSpeed(Chica.speed + 1);
+		Foxy.setSpeed(Foxy.speed + 1);
+	}
+	if (Bonny.cache.incremented == 2 && time == 4) {
+		++Bonny.cache.incremented;
+		console.log("DONE");
+		Bonny.setSpeed(Bonny.speed + 1);
+		Chica.setSpeed(Chica.speed + 1);
+		Foxy.setSpeed(Foxy.speed + 1);
+		GF.setSpeed(GF.speed + 5);
 	}
 
 	//Usage control
