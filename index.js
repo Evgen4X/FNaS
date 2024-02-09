@@ -167,8 +167,11 @@ class Animatronic {
 		if (button.getAttribute("state") == "on") {
 			toggleFlowers();
 		}
-		let jumpscareAudio = new Audio("files/sounds/Jumpscare.mp3");
-		jumpscareAudio.play();
+		let jumpscareAudio = new Audio(this.id == 666 ? "files/sounds/FoxyJumpscare.mp3" : "files/sounds/Jumpscare.mp3");
+		if(!this.cache.played){
+			jumpscareAudio.play();
+			this.cache.played = true;
+		}
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
 		JumpscareScreenBG.el.animate([{transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(3vw, -3vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-3vw, 3vw)"}], {duration: 2000});
 		JumpscareScreen.show();
