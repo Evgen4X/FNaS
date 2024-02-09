@@ -1414,7 +1414,7 @@ function GameLoop() {
 		EnergyLevel.el.innerHTML = "No power left";
 		if (!turnedOffAll) {
 			turnOffAll();
-			let ToreadorMarchAudio = new Audio("files/images/ToreadorMarch.mp3");
+			let ToreadorMarchAudio = new Audio("files/sounds/ToreadorMarch.mp3");
 			ToreadorMarchAudio.play();
 			turnedOffAll = true;
 			setTimeout(() => {
