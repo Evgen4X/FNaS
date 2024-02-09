@@ -300,10 +300,10 @@ function doorLight() {
 
 function windowLight() {
 	let rect = document.getElementById("windowDarkRect");
+	if (Freddy.cache.jumpscare == -1) {
+		Freddy.cache.jumpscare = false;
+	}
 	if (rect.style.opacity == 0) {
-		if (Freddy.cache.jumpscare == -1) {
-			Freddy.cache.jumpscare = false;
-		}
 		rect.style.opacity = 1;
 		--Data.usage;
 	} else {
@@ -636,12 +636,13 @@ const HomeScreenBG = new Element(
 <div class='imagePreload' style='background-image: url(files/images/cameraScreen05.jpg);'></div>
 <div class='imagePreload' style='background-image: url(files/images/BonnyJumpscare.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/cameraMap.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/Steam.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/FreddyJumpscare.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/GFJumpscare.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
-<div class='imagePreload' style='background-image: url(files/images/OfficeBG.png);'></div>
+<div class='imagePreload' style='background-image: url(files/images/OfficeBG.jpg);'></div>
 <div class='imagePreload' style='background-image: url(files/images/MarionettePhase.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/GFStill.png);'></div>
 <div class='imagePreload' style='background-image: url(files/images/GFRight.png);'></div>
@@ -1053,6 +1054,21 @@ const FreddyFrames = [
 						Freddy.jumpscare();
 					}
 					window.clearInterval(interval);
+					if (Math.random() < 0.2) {
+						Steam.show();
+						Steam.el.animate(
+							[
+								{opacity: 1, top: "100vh"},
+								{opacity: 1, top: "50vh"},
+								{opacity: 1, top: "20vh"},
+								{opacity: 0, top: "0vh"},
+							],
+							{duration: 2000}
+						);
+						setTimeout(() => {
+							Steam.hide();
+						}, 2000);
+					}
 					showOverlay("#000");
 				}, Math.random() * 1000 + 2000 - 5 * Freddy.speed);
 				done = true;
@@ -1161,6 +1177,10 @@ FreddyImage01.hide();
 FreddyImage02.hide();
 FreddyImage03.hide();
 FreddyImage.hide();
+
+/*STEAM*/
+const Steam = new Element("div", {position: "absolute", top: "100vh", left: 0, width: "100vw", height: "80vh", "background-image": "url(files/images/Steam.png)", "background-size": "100vw 80vh", "z-index": 999}, ScreenParent);
+Steam.hide();
 
 /*ADDING GOLDEN FREDDY IMAGE*/
 const GFOfficeImage = new Element("div", {position: "absolute", top: "20vh", left: "70vw", width: "30vw", height: "50vh", "background-image": "url(files/images/GFStill.png)", "background-size": "30vw 50vh"}, OfficeBG.el);
