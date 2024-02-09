@@ -207,25 +207,25 @@ function play(customNight = false) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
 		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
-		for(let name in Speeds[GlobalCache.night - 1]){
+		for(let name in speeds[GlobalCache.night - 1]){
 		    switch(name){
 				case "Freddy":
-					Freddy.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					Freddy.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 				case "Chica":
-					Chica.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					Chica.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 				case "Bonny":
-					Bonny.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					Bonny.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 				case "Foxy":
-					Foxy.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					Foxy.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 				case "Marionette":
-					Marionette.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					Marionette.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 				case "GF":
-					GF.setSpeed(Speeds[GlobalCache.night - 1][name]);
+					GF.setSpeed(speeds[GlobalCache.night - 1][name]);
 					break;
 			}
 		}
