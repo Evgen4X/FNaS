@@ -167,7 +167,7 @@ class Animatronic {
 		if (button.getAttribute("state") == "on") {
 			toggleFlowers();
 		}
-		let jumpscareAudio = new Audio(this.id == 666 ? "files/sounds/FoxyJumpscare.mp3" : "files/sounds/Jumpscare.mp3");
+		let jumpscareAudio = new Audio("files/sounds/Jumpscare.mp3");
 		if(!this.cache.played){
 			jumpscareAudio.play();
 			this.cache.played = true;
