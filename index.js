@@ -1414,10 +1414,13 @@ function GameLoop() {
 		EnergyLevel.el.innerHTML = "No power left";
 		if (!turnedOffAll) {
 			turnOffAll();
+			let ToreadorMarchAudio = new Audio("files/images/ToreadorMarch.mp3");
+			ToreadorMarchAudio.play();
 			turnedOffAll = true;
 			setTimeout(() => {
 				BonnyEnergyJumpscare.hide();
 				Bonny.jumpscare();
+				ToreadorMarchAudio.pause();
 			}, timeBeforeNoEnergyJumpscare);
 		}
 	}
