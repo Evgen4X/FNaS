@@ -14,3 +14,7 @@ Tips:
 - When animatronic leaves you, your screen will blink for a moment, so you always stay informed
 - When Freddy leaves camera01 and is near your window, you can prevent jumpscare by not looking at the camera and not lightning the window up, but whenever you do so, you have almost no time to react
 - Be extra careful with Freddy, as he can jumpscare you even if you don't see him walking to your office, anytime you look on cameras, he can move
+
+Easter eggs:
+- Marionette may sometimes come even if the box is charged, since she likes your flowers so much
+- When Freddy is stopped, your office may sometimes evaporate
