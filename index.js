@@ -123,16 +123,6 @@ class Animatronic {
 			}
 			this.pos++;
 			this.moved++;
-			if (this.pos == this.end) {
-				// if(this.isBlocked()){
-				// this.pos = 0;
-				// console.log("ARGH")
-				// } else {
-				// this.jumpscare();
-				// this.pos = 0;
-				// return;
-				// }
-			}
 			if (this.frames[this.pos] && this.frames[this.pos].func) {
 				console.log(this.pos, "!!!");
 				this.frames[this.pos].func();
@@ -168,7 +158,7 @@ class Animatronic {
 			toggleFlowers();
 		}
 		let jumpscareAudio = new Audio("files/sounds/Jumpscare.mp3");
-		if(!this.cache.played){
+		if (!this.cache.played) {
 			jumpscareAudio.play();
 			this.cache.played = true;
 		}
@@ -212,18 +202,18 @@ function play(customNight = false) {
 		document.getElementById("nightNumber").innerHTML = "Custom night";
 	} else {
 		document.getElementById("nightNumber").innerHTML = `${orderedNumberOf[GlobalCache.night - 1]} Night`;
-		for(let name in speeds[GlobalCache.night - 1]){
-		    if(name == "Freddy"){
+		for (let name in speeds[GlobalCache.night - 1]) {
+			if (name == "Freddy") {
 				Freddy.setSpeed(speeds[GlobalCache.night - 1][name]);
-			} else if (name == "Chica"){
+			} else if (name == "Chica") {
 				Chica.setSpeed(speeds[GlobalCache.night - 1][name]);
-			} else if (name == "Bonny"){
+			} else if (name == "Bonny") {
 				Bonny.setSpeed(speeds[GlobalCache.night - 1][name]);
-		    } else if (name == "Foxy"){
+			} else if (name == "Foxy") {
 				Foxy.setSpeed(speeds[GlobalCache.night - 1][name]);
-		    } else if (name == "Marionette"){
+			} else if (name == "Marionette") {
 				Marionette.setSpeed(speeds[GlobalCache.night - 1][name]);
-		    } else {
+			} else {
 				GF.setSpeed(speeds[GlobalCache.night - 1][name]);
 			}
 		}
@@ -577,7 +567,7 @@ function showOverlay(color, time = 200) {
 }
 
 function Victory() {
-	if(GlobalCache.night < 6){
+	if (GlobalCache.night < 6) {
 		GlobalCache.night++;
 	}
 	localStorage.setItem("FNaS_night", GlobalCache.night);
@@ -644,12 +634,12 @@ function Lose() {
 }
 
 const speeds = [
-	{"Freddy": 0, "Bonny": 0, "Chica": 0, "Foxy": 0, "Marionette": 0, "GF": 0},
-	{"Freddy": 0, "Bonny": 3, "Chica": 1, "Foxy": 1, "Marionette": 1, "GF": 0},
-	{"Freddy": 1, "Bonny": 0, "Chica": 5, "Foxy": 2, "Marionette": 4, "GF": 2},
-	{"Freddy": Math.floor(Math.random() * 2) + 1, "Bonny": 2, "Chica": 4, "Foxy": 6, "Marionette": 7, "GF": 4},
-	{"Freddy": 3, "Bonny": 5, "Chica": 7, "Foxy": 5, "Marionette": 10, "GF": 7},
-	{"Freddy": 4, "Bonny": 10, "Chica": 12, "Foxy": 16, "Marionette": 20, "GF": 10},
+	{Freddy: 0, Bonny: 0, Chica: 0, Foxy: 0, Marionette: 0, GF: 0},
+	{Freddy: 0, Bonny: 3, Chica: 1, Foxy: 1, Marionette: 1, GF: 0},
+	{Freddy: 1, Bonny: 0, Chica: 5, Foxy: 2, Marionette: 4, GF: 2},
+	{Freddy: Math.floor(Math.random() * 2) + 1, Bonny: 2, Chica: 4, Foxy: 6, Marionette: 7, GF: 4},
+	{Freddy: 3, Bonny: 5, Chica: 7, Foxy: 5, Marionette: 10, GF: 7},
+	{Freddy: 4, Bonny: 10, Chica: 12, Foxy: 16, Marionette: 20, GF: 10},
 ];
 
 orderedNumberOf = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
@@ -1304,42 +1294,36 @@ const CustomNightBG = new Element(
 		<div class='triangleUp' onclick='incSpeed(1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
 		<div id='CNSpeedBonny' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Bonny, document.getElementById("CNSpeedBonny"));'></div>
-		<input value='0' type='number' id='bonnySpeed' min='0' max='20' onchange='Bonny.setSpeed(parseInt(document.getElementById("bonnySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/FoxyJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
 		<div id='CNSpeedFoxy' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Foxy, document.getElementById("CNSpeedFoxy"));'></div>
-		<input value='0' type='number' id='foxySpeed' min='0' max='20' onchange='Foxy.setSpeed(parseInt(document.getElementById("foxySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/MarionetteJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
 		<div id='CNSpeedMarionette' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Marionette, document.getElementById("CNSpeedMarionette"));'></div>
-		<input value='0' type='number' id='marionetteSpeed' min='0' max='20' onchange='Marionette.setSpeed(parseInt(document.getElementById("marionetteSpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/ChicaJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Chica, document.getElementById("CNSpeedChica"));'></div>
 		<div id='CNSpeedChica' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Chica, document.getElementById("CNSpeedChica"));'></div>
-		<input value='0' type='number' id='chicaSpeed' min='0' max='20' onchange='Chica.setSpeed(parseInt(document.getElementById("chicaSpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/FreddyJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
 		<div id='CNSpeedFreddy' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, Freddy, document.getElementById("CNSpeedFreddy"));'></div>
-		<input value='0' type='number' id='freddySpeed' min='0' max='20' onchange='Freddy.setSpeed(parseInt(document.getElementById("freddySpeed").value))'>
 	</div>
 	<div class='customNightHolder'>
 		<div class='animatronicImage' style='background-image: url(files/images/GFJumpscare.png);'></div>
 		<div class='triangleUp' onclick='incSpeed(1, GF, document.getElementById("CNSpeedGF"));'></div>
 		<div id='CNSpeedGF' style='color: white; font-size: min(4vh, 2vw);'>0</div>
 		<div class='triangleDown' onclick='incSpeed(-1, GF, document.getElementById("CNSpeedGF"));'></div>
-		<input value='0' type='number' id='gfSpeed' min='0' max='20' onchange='GF.setSpeed(parseInt(document.getElementById("gfSpeed").value))'>
 	</div>
 </div>
 <div style='display: flex; justify-content: space-around; align-items: space-around'>
