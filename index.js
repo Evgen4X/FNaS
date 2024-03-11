@@ -124,7 +124,6 @@ class Animatronic {
 			this.pos++;
 			this.moved++;
 			if (this.frames[this.pos] && this.frames[this.pos].func) {
-				console.log(this.pos, "!!!");
 				this.frames[this.pos].func();
 			}
 		}
@@ -132,7 +131,6 @@ class Animatronic {
 	}
 
 	jumpscare() {
-		console.log("BOO");
 		let button = document.getElementById("doorOpenButton");
 		if (button.getAttribute("state") == "on") {
 			doorToggle();
@@ -165,7 +163,6 @@ class Animatronic {
 		JumpscareScreenBG.el.style["background-image"] = this.jumpscareImg;
 		JumpscareScreenBG.el.animate([{transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(3vw, -3vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(6vw, 6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-6vw, -6vw)"}, {transform: "translate(-6vw, 6vw)"}, {transform: "translate(6vw, -6vw)"}, {transform: "translate(-3vw, 3vw)"}], {duration: 2000});
 		JumpscareScreen.show();
-		console.log(this.jumpscareImg);
 		setTimeout(Lose, 2000);
 	}
 }
@@ -181,7 +178,6 @@ function newGame() {
 
 function customNightPlay() {
 	switchScreens(CustomNightScreen, HomeScreen);
-	console.log(Marionette.speed);
 	play(true);
 }
 
@@ -374,10 +370,8 @@ function GFspawn(pos, img) {
 	GF.cache.pos = pos;
 	GF.cache.jumpscare = false;
 	GF.cache.canBeShown = false;
-	console.log("Ufff");
 	let interval = setInterval(() => {
 		if (GF.cache.jumpscare == null) {
-			console.log("CLEARED");
 			window.clearInterval(interval);
 			img.hide();
 			GF.cache.canBeShown = true;
@@ -444,12 +438,10 @@ function toggleCamera() {
 					}, 3500 + Math.random() * 1000);
 				}
 				adjSpeedBuff(Foxy, -Math.sqrt(Foxy.cache.lastTimeSeen) / 40);
-				console.log("Cache", -Math.sqrt(Foxy.cache.lastTimeSeen) / 40, " -> ", Foxy.speedBuff);
 			}
 			CameraScreen.hide();
 		}, 333);
 	} else {
-		console.log(Foxy.speedBuff);
 		Data.usage--;
 
 		if (GF.cache.jumpscare != null && GF.cache.pos != 6) {
@@ -491,11 +483,9 @@ function switchCameras(idToClose, idToOpen) {
 	}
 	if (idToOpen == 3) {
 		adjSpeedBuff(Foxy, -Math.sqrt(Foxy.cache.lastTimeSeen) / 40);
-		console.log("Cache", -Math.sqrt(Foxy.cache.lastTimeSeen) / 40, " -> ", Foxy.speedBuff);
 	}
 	if (GF.cache.jumpscare != null && idToOpen != GF.cache.pos) {
 		GF.cache.jumpscare = null;
-		console.log("NULLED");
 	} else if (Math.random() < GF.speed / 500 && GF.cache.canBeShown) {
 		GFspawn(Data.cameraId, [GFImage01, GFImage02, GFImage03, GFImage04, GFImage05][idToOpen]);
 	}
@@ -790,7 +780,6 @@ CameraRecordingCircle.el.animate([{opacity: 1}, {opacity: 1}, {opacity: 1}, {opa
 
 function CameraDoor04Phase(width) {
 	CameraDoor04.el.style.width = width;
-	console.log(width);
 }
 
 function isDoorLocked() {
@@ -811,7 +800,6 @@ const FoxyFrames = [
 			FoxyImage.el.style.width = "0vw";
 		}
 		Foxy.setSpeed(Foxy.cache.speed);
-		console.log(Foxy.speed);
 	}),
 	new Frame(6661, 1, null, "0vw", "0vh", "0vw", "0vh", () => {
 		CameraDoor04Phase("3.4vw");
@@ -860,7 +848,6 @@ const MarionetteFrames = [
 			MarionetteImage.el.style.width = "0vw";
 		}
 		MarionetteReadyToGetIn = false;
-		console.log("Waiting...");
 		let interval = setInterval(() => {
 			if (MarionetteReadyToGetIn) {
 				MarionetteOfficeImage.show();
@@ -1065,20 +1052,16 @@ Chica.setUpdateBlockFunction(() => {
 const FreddyFrames = [
 	new Frame(70, 0, null, "0vw", "0vh", "0vw", "0vh", () => {
 		FreddyImage.hide();
-		console.log("A!");
 	}),
 
 	new Frame(71, 1, "url(files/images/FreddyPos1.png)", "60vw", "20vh", "10vw", "20vh", () => {
 		FreddyImage01.show();
-		console.log("A#");
 	}),
 	new Frame(72, 2, "url(files/images/FreddyPos2.png)", "20vw", "10vh", "10vw", "30vh", () => {
 		FreddyImage01.hide();
 		FreddyImage02.show();
-		console.log("A'");
 	}),
 	new Frame(73, 3, "url(files/images/FreddyPos2.png)", "85vw", "20vh", "10vw", "30vh", () => {
-		console.log("A*");
 		FreddyImage02.hide();
 		FreddyImage03.show();
 	}),
@@ -1347,7 +1330,7 @@ let turnedOffAll = false;
 let timeBeforeNoEnergyJumpscare = Math.random() * 15000 + 5000;
 function GameLoop() {
 	//Time control
-	Data.time += 1;
+	Data.time += 1.25;
 	let time = Data.time / 3600;
 	time = time < 1 ? 12 : Math.floor(time);
 	Time.el.innerHTML = time + "AM";
@@ -1357,22 +1340,16 @@ function GameLoop() {
 	}
 	if (Bonny.cache.incremented == 0 && time == 2) {
 		++Bonny.cache.incremented;
-		console.log("DONE");
-		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 	}
 	if (Bonny.cache.incremented == 1 && time == 3) {
 		++Bonny.cache.incremented;
-		console.log("DONE");
-		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 		Chica.setSpeed(Chica.speed + 1);
 		Foxy.setSpeed(Foxy.speed + 1);
 	}
 	if (Bonny.cache.incremented == 2 && time == 4) {
 		++Bonny.cache.incremented;
-		console.log("DONE");
-		console.log(Bonny.speed);
 		Bonny.setSpeed(Bonny.speed + 1);
 		Chica.setSpeed(Chica.speed + 1);
 		Foxy.setSpeed(Foxy.speed + 1);
@@ -1416,7 +1393,6 @@ function GameLoop() {
 	if (Bonny.speed != 0) {
 		let frame = Bonny.update();
 		if (Bonny.moved > 0) {
-			console.log("M");
 			Bonny.moved--;
 			if (frame && frame.image) {
 				let parent = null;
@@ -1440,7 +1416,6 @@ function GameLoop() {
 	if (Chica.speed != 0) {
 		let frame = Chica.update();
 		if (Chica.moved > 0) {
-			console.log("C");
 			Chica.moved--;
 			if (frame && frame.image) {
 				let parent = null;
@@ -1491,7 +1466,6 @@ function GameLoop() {
 	if (Freddy.speed != 0) {
 		let frame = Freddy.update();
 		if (Freddy.moved > 0) {
-			console.log("C");
 			Freddy.moved--;
 			if (frame && frame.image) {
 				let parent = null;
