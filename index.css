@@ -1,0 +1,142 @@
+body,
+html {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+:root {
+	--fontSize: min(4.6vh, 2.3vw);
+}
+
+.transparent {
+	background-color: transparent;
+}
+
+.flexColumnContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.homeScreenText {
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	font-weight: bold;
+}
+
+.homeScreenButton,
+.gameLoadingScreenText,
+.gameText {
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	display: block;
+	width: auto;
+	text-align: center;
+	margin: 0;
+}
+
+.imagePreload {
+	width: 0.1px;
+	height: 0.1px;
+}
+
+.homeScreenButton:hover::before {
+	content: ">>";
+	background-color: transparent;
+	color: white;
+	font-size: var(--fontSize);
+	outline: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+#gameTime,
+#gameNightNumberDiv {
+	text-align: right;
+	align-self: right;
+}
+
+.gameControlButton {
+	width: min(2.5vw, 3vh);
+	height: min(2.5vw, 3vh);
+	background-color: #aa0000;
+	position: absolute;
+	z-index: 3;
+	border: min(0.5vw, 0.7vh) solid #323;
+}
+
+.gameControlButton[state="on"] {
+	background-color: #00aa00;
+}
+
+.gameDarkRect {
+	position: absolute;
+	background-color: black;
+	z-index: 1;
+}
+
+.cameraControlButton {
+	opacity: 0;
+	width: 4.5vw;
+	height: 4.5vh;
+	/* background-color: #c0ffee; */
+	position: absolute;
+	outline: none;
+	border: none;
+}
+
+#customNightContainer {
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+}
+
+.customNightHolder {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.animatronicImage {
+	width: 16vw;
+	height: 60vh;
+	background-size: 16vw 60vh;
+}
+
+.triangleUp {
+	width: 0;
+	height: 0;
+	border-top: 3vw solid transparent;
+	border-left: 3vw solid transparent;
+	border-right: 3vw solid transparent;
+	border-bottom: 3vw solid white;
+}
+
+.triangleDown {
+	width: 0;
+	height: 0;
+	border-top: 3vw solid white;
+	border-left: 3vw solid transparent;
+	border-right: 3vw solid transparent;
+	border-bottom: 3vw solid transparent;
+}
+
+#holdToChargeButton
+{
+	user-select: none;
+	cursor: pointer; 
+}
