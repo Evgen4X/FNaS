@@ -135,8 +135,7 @@ html {
 	border-bottom: 3vw solid transparent;
 }
 
-#holdToChargeButton
-{
+#holdToChargeButton {
 	user-select: none;
-	cursor: pointer; 
+	cursor: pointer;
 }
